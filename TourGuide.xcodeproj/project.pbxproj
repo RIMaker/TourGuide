@@ -7,6 +7,17 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		7C1B4D18294E132300543D9F /* Place.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7C1B4D17294E132300543D9F /* Place.swift */; };
+		7C1B4D1C294E139700543D9F /* PlaceProperties.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7C1B4D1B294E139700543D9F /* PlaceProperties.swift */; };
+		7C1B4D1F294E176F00543D9F /* Feature.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7C1B4D1E294E176F00543D9F /* Feature.swift */; };
+		7C1B4D21294E184600543D9F /* Geometry.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7C1B4D20294E184600543D9F /* Geometry.swift */; };
+		7C1B4D23294E188000543D9F /* Properties.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7C1B4D22294E188000543D9F /* Properties.swift */; };
+		7C1B4D25294E1B8000543D9F /* Address.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7C1B4D24294E1B8000543D9F /* Address.swift */; };
+		7C1B4D27294E1C8E00543D9F /* Bbox.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7C1B4D26294E1C8E00543D9F /* Bbox.swift */; };
+		7C1B4D29294E1D2100543D9F /* Sources.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7C1B4D28294E1D2100543D9F /* Sources.swift */; };
+		7C1B4D2B294E1D6C00543D9F /* Preview.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7C1B4D2A294E1D6C00543D9F /* Preview.swift */; };
+		7C1B4D2D294E1E2600543D9F /* WikipediaExtracts.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7C1B4D2C294E1E2600543D9F /* WikipediaExtracts.swift */; };
+		7C1B4D2F294E1E5D00543D9F /* Point.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7C1B4D2E294E1E5D00543D9F /* Point.swift */; };
 		7CF1BCEA2910252200DDFA22 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7CF1BCE92910252200DDFA22 /* AppDelegate.swift */; };
 		7CF1BCEC2910252200DDFA22 /* SceneDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7CF1BCEB2910252200DDFA22 /* SceneDelegate.swift */; };
 		7CF1BCF32910252200DDFA22 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 7CF1BCF22910252200DDFA22 /* Assets.xcassets */; };
@@ -15,9 +26,23 @@
 		7CF1BD0E2910475900DDFA22 /* MainViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7CF1BD0D2910475900DDFA22 /* MainViewController.swift */; };
 		7CF1BD1029105F3000DDFA22 /* ViewFactory.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7CF1BD0F29105F3000DDFA22 /* ViewFactory.swift */; };
 		7CF1BD12291061CF00DDFA22 /* SystemSymbol.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7CF1BD11291061CF00DDFA22 /* SystemSymbol.swift */; };
+		7CF1BD14291068DD00DDFA22 /* MapVCPresenter.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7CF1BD13291068DD00DDFA22 /* MapVCPresenter.swift */; };
+		7CF1BD16291072E500DDFA22 /* APIProvider.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7CF1BD15291072E500DDFA22 /* APIProvider.swift */; };
+		7CF1BD18291077A000DDFA22 /* NetworkManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7CF1BD17291077A000DDFA22 /* NetworkManager.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
+		7C1B4D17294E132300543D9F /* Place.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Place.swift; sourceTree = "<group>"; };
+		7C1B4D1B294E139700543D9F /* PlaceProperties.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PlaceProperties.swift; sourceTree = "<group>"; };
+		7C1B4D1E294E176F00543D9F /* Feature.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Feature.swift; sourceTree = "<group>"; };
+		7C1B4D20294E184600543D9F /* Geometry.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Geometry.swift; sourceTree = "<group>"; };
+		7C1B4D22294E188000543D9F /* Properties.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Properties.swift; sourceTree = "<group>"; };
+		7C1B4D24294E1B8000543D9F /* Address.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Address.swift; sourceTree = "<group>"; };
+		7C1B4D26294E1C8E00543D9F /* Bbox.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Bbox.swift; sourceTree = "<group>"; };
+		7C1B4D28294E1D2100543D9F /* Sources.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Sources.swift; sourceTree = "<group>"; };
+		7C1B4D2A294E1D6C00543D9F /* Preview.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Preview.swift; sourceTree = "<group>"; };
+		7C1B4D2C294E1E2600543D9F /* WikipediaExtracts.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WikipediaExtracts.swift; sourceTree = "<group>"; };
+		7C1B4D2E294E1E5D00543D9F /* Point.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Point.swift; sourceTree = "<group>"; };
 		7CF1BCE62910252200DDFA22 /* TourGuide.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = TourGuide.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		7CF1BCE92910252200DDFA22 /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		7CF1BCEB2910252200DDFA22 /* SceneDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SceneDelegate.swift; sourceTree = "<group>"; };
@@ -28,6 +53,9 @@
 		7CF1BD0D2910475900DDFA22 /* MainViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MainViewController.swift; sourceTree = "<group>"; };
 		7CF1BD0F29105F3000DDFA22 /* ViewFactory.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ViewFactory.swift; sourceTree = "<group>"; };
 		7CF1BD11291061CF00DDFA22 /* SystemSymbol.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SystemSymbol.swift; sourceTree = "<group>"; };
+		7CF1BD13291068DD00DDFA22 /* MapVCPresenter.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MapVCPresenter.swift; sourceTree = "<group>"; };
+		7CF1BD15291072E500DDFA22 /* APIProvider.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = APIProvider.swift; sourceTree = "<group>"; };
+		7CF1BD17291077A000DDFA22 /* NetworkManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NetworkManager.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -41,6 +69,47 @@
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
+		7C1B4D16294E130A00543D9F /* Place */ = {
+			isa = PBXGroup;
+			children = (
+				7C1B4D17294E132300543D9F /* Place.swift */,
+				7C1B4D19294E132900543D9F /* Submodels */,
+			);
+			path = Place;
+			sourceTree = "<group>";
+		};
+		7C1B4D19294E132900543D9F /* Submodels */ = {
+			isa = PBXGroup;
+			children = (
+				7C1B4D1E294E176F00543D9F /* Feature.swift */,
+				7C1B4D20294E184600543D9F /* Geometry.swift */,
+				7C1B4D22294E188000543D9F /* Properties.swift */,
+			);
+			path = Submodels;
+			sourceTree = "<group>";
+		};
+		7C1B4D1A294E136900543D9F /* PlaceProperties */ = {
+			isa = PBXGroup;
+			children = (
+				7C1B4D1B294E139700543D9F /* PlaceProperties.swift */,
+				7C1B4D1D294E13A200543D9F /* Submodels */,
+			);
+			path = PlaceProperties;
+			sourceTree = "<group>";
+		};
+		7C1B4D1D294E13A200543D9F /* Submodels */ = {
+			isa = PBXGroup;
+			children = (
+				7C1B4D24294E1B8000543D9F /* Address.swift */,
+				7C1B4D26294E1C8E00543D9F /* Bbox.swift */,
+				7C1B4D28294E1D2100543D9F /* Sources.swift */,
+				7C1B4D2A294E1D6C00543D9F /* Preview.swift */,
+				7C1B4D2C294E1E2600543D9F /* WikipediaExtracts.swift */,
+				7C1B4D2E294E1E5D00543D9F /* Point.swift */,
+			);
+			path = Submodels;
+			sourceTree = "<group>";
+		};
 		7CF1BCDD2910252200DDFA22 = {
 			isa = PBXGroup;
 			children = (
@@ -109,6 +178,8 @@
 		7CF1BD0329103F4A00DDFA22 /* Models */ = {
 			isa = PBXGroup;
 			children = (
+				7C1B4D16294E130A00543D9F /* Place */,
+				7C1B4D1A294E136900543D9F /* PlaceProperties */,
 			);
 			path = Models;
 			sourceTree = "<group>";
@@ -134,6 +205,8 @@
 		7CF1BD062910405300DDFA22 /* Network */ = {
 			isa = PBXGroup;
 			children = (
+				7CF1BD15291072E500DDFA22 /* APIProvider.swift */,
+				7CF1BD17291077A000DDFA22 /* NetworkManager.swift */,
 			);
 			path = Network;
 			sourceTree = "<group>";
@@ -165,6 +238,7 @@
 		7CF1BD0A291044BA00DDFA22 /* Presenter */ = {
 			isa = PBXGroup;
 			children = (
+				7CF1BD13291068DD00DDFA22 /* MapVCPresenter.swift */,
 			);
 			path = Presenter;
 			sourceTree = "<group>";
@@ -255,12 +329,26 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				7C1B4D27294E1C8E00543D9F /* Bbox.swift in Sources */,
+				7C1B4D1F294E176F00543D9F /* Feature.swift in Sources */,
+				7CF1BD18291077A000DDFA22 /* NetworkManager.swift in Sources */,
 				7CF1BD12291061CF00DDFA22 /* SystemSymbol.swift in Sources */,
+				7CF1BD16291072E500DDFA22 /* APIProvider.swift in Sources */,
+				7C1B4D21294E184600543D9F /* Geometry.swift in Sources */,
 				7CF1BCEA2910252200DDFA22 /* AppDelegate.swift in Sources */,
+				7C1B4D23294E188000543D9F /* Properties.swift in Sources */,
+				7C1B4D2D294E1E2600543D9F /* WikipediaExtracts.swift in Sources */,
+				7C1B4D1C294E139700543D9F /* PlaceProperties.swift in Sources */,
 				7CF1BCEC2910252200DDFA22 /* SceneDelegate.swift in Sources */,
+				7C1B4D25294E1B8000543D9F /* Address.swift in Sources */,
+				7CF1BD14291068DD00DDFA22 /* MapVCPresenter.swift in Sources */,
+				7C1B4D29294E1D2100543D9F /* Sources.swift in Sources */,
 				7CF1BD1029105F3000DDFA22 /* ViewFactory.swift in Sources */,
 				7CF1BCFE2910295800DDFA22 /* MapViewController.swift in Sources */,
+				7C1B4D2F294E1E5D00543D9F /* Point.swift in Sources */,
 				7CF1BD0E2910475900DDFA22 /* MainViewController.swift in Sources */,
+				7C1B4D2B294E1D6C00543D9F /* Preview.swift in Sources */,
+				7C1B4D18294E132300543D9F /* Place.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

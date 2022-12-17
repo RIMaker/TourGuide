@@ -48,7 +48,7 @@ extension ViewFactoryImpl {
     }
     
     func makeMapScreen(title: String? = nil, image: SystemSymbol? = nil) -> UIViewController {
-        let mapVC = MapViewController()
+        let mapVC = MapViewControllerImpl()
         mapVC.tabBarItem.title = title
         if let image = image {
             mapVC.tabBarItem.image = UIImage(systemName: image.rawValue)
