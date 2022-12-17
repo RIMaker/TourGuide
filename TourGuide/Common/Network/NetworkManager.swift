@@ -21,7 +21,6 @@ class NetworkManagerImpl: NetworkManager {
         guard let url = requestUrl else { return }
         let session = URLSession.shared
         let request = URLRequest(url: url)
-        //request.setValue(APIProvider.shared.contentType, forHTTPHeaderField: "Content-Type")
         DispatchQueue.global().async {
             session.dataTask(with: request) { (data, response, error) in
                 guard
@@ -38,8 +37,8 @@ class NetworkManagerImpl: NetworkManager {
                 let decoder = JSONDecoder()
                 decoder.keyDecodingStrategy = .convertFromSnakeCase
                 do {
-                    let companyItem = try decoder.decode(type, from: data)
-                    complition(.success(companyItem))
+                    let places = try decoder.decode(type, from: data)
+                    complition(.success(places))
                 } catch {
                     complition(.failure(error))
                 }

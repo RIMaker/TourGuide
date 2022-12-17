@@ -11,6 +11,7 @@ enum ScreenIdentifier {
     case mainScreen
     case launchScreen
     case mapScreen
+    case placesList
 }
 
 
@@ -25,6 +26,7 @@ class ViewFactoryImpl: ViewFactory {
         case .mainScreen: return makeMainScreen()
         case .launchScreen: return makeLaunchScreen()
         case .mapScreen: return makeMapScreen()
+        case .placesList: return makePlacesListScreen()
         }
     }
     
@@ -34,9 +36,10 @@ class ViewFactoryImpl: ViewFactory {
 extension ViewFactoryImpl {
     
     func makeMainScreen() -> UIViewController {
-        let mainVC = MainViewController()
+        let mainVC = MainViewControllerImpl()
         mainVC.viewControllers = [
-            makeMapScreen(title: "Карта", image: .map)
+            makeMapScreen(title: "Карта", image: .map),
+            makePlacesListScreen(title: "Места", image: .places)
         ]
         return mainVC
     }
@@ -54,6 +57,15 @@ extension ViewFactoryImpl {
             mapVC.tabBarItem.image = UIImage(systemName: image.rawValue)
         }
         return mapVC
+    }
+    
+    func makePlacesListScreen(title: String? = nil, image: SystemSymbol? = nil) -> UIViewController {
+        let placesVC = PlacesListControllerImpl()
+        placesVC.tabBarItem.title = title
+        if let image = image {
+            placesVC.tabBarItem.image = UIImage(systemName: image.rawValue)
+        }
+        return placesVC
     }
     
 }

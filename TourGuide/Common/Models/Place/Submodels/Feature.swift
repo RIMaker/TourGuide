@@ -8,8 +8,8 @@
 import Foundation
 
 struct Feature: Codable {
-    let type: String
-    let id: String
-    let geometry: Geometry
-    let properties: Properties
+    let type: String?
+    let id: String?
+    let geometry: Geometry?
+    let properties: Properties?
 }

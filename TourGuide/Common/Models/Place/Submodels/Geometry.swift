@@ -8,6 +8,6 @@
 import Foundation
 
 struct Geometry: Codable {
-    let type: String
-    let coordinates: [Double]
+    let type: String?
+    let coordinates: [Double]?
 }

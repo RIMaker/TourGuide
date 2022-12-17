@@ -9,4 +9,5 @@ import Foundation
 
 enum SystemSymbol: String {
     case map = "map"
+    case places = "globe.central.south.asia.fill"
 }

@@ -12,7 +12,7 @@ protocol MapViewController {
     
 }
 
-class MapViewControllerImpl: UIViewController {
+class MapViewControllerImpl: UIViewController, MapViewController {
     
     lazy var mapView: MKMapView = {
         let map = MKMapView()
