@@ -52,6 +52,8 @@ extension ViewFactoryImpl {
     
     func makeMapScreen(title: String? = nil, image: SystemSymbol? = nil) -> UIViewController {
         let mapVC = MapViewControllerImpl()
+        let mapVCPresenter: MapVCPresenter = MapVCPresenterImpl(view: mapVC)
+        mapVC.presenter = mapVCPresenter
         mapVC.tabBarItem.title = title
         if let image = image {
             mapVC.tabBarItem.image = UIImage(systemName: image.rawValue)
@@ -61,11 +63,16 @@ extension ViewFactoryImpl {
     
     func makePlacesListScreen(title: String? = nil, image: SystemSymbol? = nil) -> UIViewController {
         let placesVC = PlacesListControllerImpl()
+        let placesVCPresenter: PlacesListVCPresenter = PlacesListVCPresenterImpl(
+            networkManager: NetworkManagerImpl(),
+            view: placesVC)
+        placesVC.presenter = placesVCPresenter
         placesVC.tabBarItem.title = title
         if let image = image {
             placesVC.tabBarItem.image = UIImage(systemName: image.rawValue)
         }
-        return placesVC
+        let navController = UINavigationController(rootViewController: placesVC)
+        return navController
     }
     
 }

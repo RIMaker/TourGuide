@@ -8,6 +8,6 @@
 import Foundation
 
 struct WikipediaExtracts: Codable {
-    let title: String
-    let text: String
+    let title: String?
+    let text: String?
 }

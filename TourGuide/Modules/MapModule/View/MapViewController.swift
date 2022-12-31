@@ -8,11 +8,13 @@
 import UIKit
 import MapKit
 
-protocol MapViewController {
+protocol MapViewController: AnyObject {
     
 }
 
 class MapViewControllerImpl: UIViewController, MapViewController {
+    
+    var presenter: MapVCPresenter?
     
     lazy var mapView: MKMapView = {
         let map = MKMapView()

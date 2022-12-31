@@ -7,7 +7,7 @@
 
 import Foundation
 
-struct Place: Codable {
+struct Places: Codable {
     let type: String
     let features: [Feature]
 }

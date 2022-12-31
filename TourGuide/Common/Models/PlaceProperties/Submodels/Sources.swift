@@ -8,6 +8,6 @@
 import Foundation
 
 struct Sources: Codable {
-    let geometry: String
-    let attributes: [String]
+    let geometry: String?
+    let attributes: [String]?
 }

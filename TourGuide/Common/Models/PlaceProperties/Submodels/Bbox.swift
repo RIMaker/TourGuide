@@ -8,8 +8,8 @@
 import Foundation
 
 struct Bbox: Codable {
-    let lonMin: Double
-    let lonMax: Double
-    let latMin: Double
-    let latMax: Double
+    let lonMin: Double?
+    let lonMax: Double?
+    let latMin: Double?
+    let latMax: Double?
 }

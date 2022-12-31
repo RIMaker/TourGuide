@@ -8,12 +8,15 @@
 import Foundation
 
 protocol MapVCPresenter {
-//    var sights: CompanyItem? { get set }
-//    init(view: EmployeesTableViewController, networkManager: NetworkManager, cacheManager: CacheManager)
-//    func viewShown()
-//    func fetchData()
+    init(view: MapViewController?)
 }
 
 class MapVCPresenterImpl: MapVCPresenter {
+    
+    weak var view: MapViewController?
+    
+    required init(view: MapViewController? = nil) {
+        self.view = view
+    }
     
 }

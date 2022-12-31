@@ -8,7 +8,7 @@
 import Foundation
 
 struct Preview: Codable {
-    let source: String
-    let height: Int
-    let width: Int
+    let source: String?
+    let height: Int?
+    let width: Int?
 }

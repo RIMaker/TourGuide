@@ -8,6 +8,6 @@
 import Foundation
 
 struct Point: Codable {
-    let lon: Double
-    let lat: Double
+    let lon: Double?
+    let lat: Double?
 }
