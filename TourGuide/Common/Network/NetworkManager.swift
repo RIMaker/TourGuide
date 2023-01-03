@@ -21,30 +21,28 @@ class NetworkManagerImpl: NetworkManager {
         guard let url = requestUrl else { return }
         let session = URLSession.shared
         let request = URLRequest(url: url)
-        //request.setValue(APIProvider.shared.contentType, forHTTPHeaderField: "Content-Type")
-        DispatchQueue.global().async {
-            session.dataTask(with: request) { (data, response, error) in
-                guard
-                    let data = data,
-                    let response = response as? HTTPURLResponse,
-                    response.statusCode == 200,
-                    error == nil
-                else {
-                    if let error = error {
-                        complition(.failure(error))
-                    }
-                    return
-                }
-                let decoder = JSONDecoder()
-                decoder.keyDecodingStrategy = .convertFromSnakeCase
-                do {
-                    let companyItem = try decoder.decode(type, from: data)
-                    complition(.success(companyItem))
-                } catch {
+        session.dataTask(with: request) { (data, response, error) in
+            guard
+                let data = data,
+                let response = response as? HTTPURLResponse,
+                response.statusCode == 200,
+                error == nil
+            else {
+                if let error = error {
                     complition(.failure(error))
                 }
-            }.resume()
-        }
+                return
+            }
+            let decoder = JSONDecoder()
+            decoder.keyDecodingStrategy = .convertFromSnakeCase
+            do {
+                let places = try decoder.decode(type, from: data)
+                complition(.success(places))
+            } catch {
+                complition(.failure(error))
+            }
+        }.resume()
+        
     }
     
     func createNetworkConnectionMonitor(complition: @escaping (NWPath.Status) -> ()) {
