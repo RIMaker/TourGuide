@@ -6,52 +6,40 @@
 //
 
 import UIKit
-import MapKit
 
 protocol PlacesListController: AnyObject {
-    var locationManager: CLLocationManager { get set }
+    var isLoading: Bool { get set }
     func setupViews()
-    func actIndStopAnimating()
     func reloadData()
 }
 
 class PlacesListControllerImpl: UIViewController, PlacesListController {
     
     var presenter: PlacesListVCPresenter?
-    var locationManager = CLLocationManager()
+    
+    var isLoading = false
     
     private var collectionView: UICollectionView?
+    
+    private lazy var footerActivityIndicator: UIActivityIndicatorView = {
+        let actInd = UIActivityIndicatorView(style: UIActivityIndicatorView.Style.medium)
+        actInd.translatesAutoresizingMaskIntoConstraints = false
+        actInd.hidesWhenStopped = true
+        return actInd
+    }()
     
     private let refreshControl: UIRefreshControl = {
         let refreshCntrl = UIRefreshControl()
         return refreshCntrl
     }()
     
-    private let activityIndicator: UIActivityIndicatorView = {
-        let actInd = UIActivityIndicatorView()
-        actInd.translatesAutoresizingMaskIntoConstraints = false
-        actInd.style = .large
-        actInd.startAnimating()
-        actInd.hidesWhenStopped = true
-        return actInd
-    }()
-    
     override func viewDidLoad() {
         super.viewDidLoad()
-        presenter?.viewShown()
-    }
-    
-    override func viewWillAppear(_ animated: Bool) {
-        super.viewWillAppear(animated)
-        if CLLocationManager.authorizationStatus() == .notDetermined {
-            locationManager.requestWhenInUseAuthorization()
-        }
-        presenter?.startUpdatingLocation()
     }
     
     override func viewDidAppear(_ animated: Bool) {
         super.viewDidAppear(animated)
-        activityIndicator.center = view.center
+        presenter?.viewShown()
     }
     
     func setupViews() {
@@ -60,12 +48,18 @@ class PlacesListControllerImpl: UIViewController, PlacesListController {
                 
         let layout: UICollectionViewFlowLayout = UICollectionViewFlowLayout()
         layout.sectionInset = UIEdgeInsets(top: 20, left: 18, bottom: 20, right: 18)
-        layout.itemSize = CGSize(width: view.frame.size.width - 20, height: 107)
+        layout.itemSize = CGSize(width: view.frame.size.width - 36, height: view.frame.size.height/2 - 150)
+        layout.footerReferenceSize = CGSize(width: view.frame.width, height: 55)
         layout.scrollDirection = .vertical
         layout.minimumLineSpacing = 20;
         
         collectionView = UICollectionView(frame: self.view.frame, collectionViewLayout: layout)
         collectionView?.register(PlaceCell.self, forCellWithReuseIdentifier: "Cell")
+        collectionView?.register(
+            LoadingReusableView.self,
+            forSupplementaryViewOfKind: UICollectionView.elementKindSectionFooter,
+            withReuseIdentifier: "Footer"
+        )
         collectionView?.backgroundColor = .systemBackground
         
         collectionView?.dataSource = self
@@ -75,12 +69,8 @@ class PlacesListControllerImpl: UIViewController, PlacesListController {
         refreshControl.addTarget(self, action: #selector(updateData(_:)), for: .valueChanged)
         collectionView?.refreshControl = refreshControl
         
-        locationManager.delegate = self
-        locationManager.desiredAccuracy = kCLLocationAccuracyBest
-        
         view.addSubview(collectionView!)
-        view.addSubview(activityIndicator)
-        
+            
         self.view = view
     }
     
@@ -93,10 +83,7 @@ class PlacesListControllerImpl: UIViewController, PlacesListController {
     func reloadData() {
         self.collectionView?.reloadData()
     }
-    
-    func actIndStopAnimating() {
-        activityIndicator.stopAnimating()
-    }
+
 }
 
 
@@ -104,40 +91,53 @@ class PlacesListControllerImpl: UIViewController, PlacesListController {
 extension PlacesListControllerImpl: UICollectionViewDelegate, UICollectionViewDataSource {
     
     func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
-        presenter?.places.count ?? 0
+        presenter?.placesProperties.count ?? 0
     }
     
     func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
         let myCell = collectionView.dequeueReusableCell(withReuseIdentifier: "Cell", for: indexPath) as! PlaceCell
-        
-        myCell.place = presenter?.places[indexPath.item]
-        myCell.distanceToUser = presenter?.distanceToUser(fromPlace: presenter!.places[indexPath.item])
-        
+            
+        myCell.place = presenter?.placesProperties[indexPath.item]
+            
         return myCell
     }
     
-}
-
-
-extension PlacesListControllerImpl: CLLocationManagerDelegate {
-    
-    func locationManager(_ manager: CLLocationManager, didUpdateLocations locations: [CLLocation]) {
-        let geocoder = CLGeocoder()
-        if let loc = locations.last {
-            geocoder.reverseGeocodeLocation(loc) { [weak self] (placemarks, error) in
-                if error != nil {
-                    print("error")
-                } else {
-                    if let placemark = placemarks?.first {
-                        print(placemark.debugDescription)
-                        self?.presenter?.add(placemark: placemark)
-                    }
-                }
-            }
+    func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, referenceSizeForFooterInSection section: Int) -> CGSize {
+        if isLoading {
+            return CGSize.zero
+        } else {
+            return CGSize(width: view.frame.width, height: 55)
         }
     }
-
-    func locationManager(_ manager: CLLocationManager, didFailWithError error: Error) {
-        print(error.localizedDescription)
+    
+    func collectionView(_ collectionView: UICollectionView, viewForSupplementaryElementOfKind kind: String, at indexPath: IndexPath) -> UICollectionReusableView {
+        if kind == UICollectionView.elementKindSectionFooter {
+            let aFooterView = collectionView.dequeueReusableSupplementaryView(ofKind: kind, withReuseIdentifier: "Footer", for: indexPath) as! LoadingReusableView
+            aFooterView.backgroundColor = UIColor.clear
+            aFooterView.addSubview(footerActivityIndicator)
+            footerActivityIndicator.topAnchor.constraint(equalTo: aFooterView.topAnchor).isActive = true
+            footerActivityIndicator.centerXAnchor.constraint(equalTo: aFooterView.centerXAnchor).isActive = true
+            return aFooterView
+        }
+        return UICollectionReusableView()
     }
+    
+    func collectionView(_ collectionView: UICollectionView, willDisplaySupplementaryView view: UICollectionReusableView, forElementKind elementKind: String, at indexPath: IndexPath) {
+        if elementKind == UICollectionView.elementKindSectionFooter {
+            self.footerActivityIndicator.startAnimating()
+        }
+    }
+    
+    func collectionView(_ collectionView: UICollectionView, didEndDisplayingSupplementaryView view: UICollectionReusableView, forElementOfKind elementKind: String, at indexPath: IndexPath) {
+        if elementKind == UICollectionView.elementKindSectionFooter {
+            self.footerActivityIndicator.stopAnimating()
+        }
+    }
+    
+    func collectionView(_ collectionView: UICollectionView, willDisplay cell: UICollectionViewCell, forItemAt indexPath: IndexPath) {
+        if let presenter = presenter, indexPath.item == (presenter.placesProperties.count - 1) {
+            presenter.loadMoreData()
+        }
+    }
+    
 }
