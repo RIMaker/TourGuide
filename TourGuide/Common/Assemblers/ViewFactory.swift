@@ -65,6 +65,7 @@ extension ViewFactoryImpl {
         let placesVC = PlacesListControllerImpl()
         let placesVCPresenter: PlacesListVCPresenter = PlacesListVCPresenterImpl(
             networkManager: NetworkManagerImpl(),
+            cacheManager: CacheManagerImpl(),
             view: placesVC)
         placesVC.presenter = placesVCPresenter
         placesVC.tabBarItem.title = title
