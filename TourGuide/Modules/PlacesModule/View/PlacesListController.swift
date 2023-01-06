@@ -9,7 +9,7 @@ import UIKit
 import MapKit
 
 protocol PlacesListController: AnyObject {
-    var locationManager: CLLocationManager { get set }
+    var locationManager: CLLocationManager { get }
     func setupViews()
     func actIndStopAnimating()
     func actIndStartAnimating()
@@ -18,9 +18,9 @@ protocol PlacesListController: AnyObject {
 
 class PlacesListControllerImpl: UIViewController, PlacesListController {
     
-    var presenter: PlacesListVCPresenter?
-    
     var locationManager = CLLocationManager()
+    
+    var presenter: PlacesListVCPresenter?
     
     private var collectionView: UICollectionView?
     
@@ -60,7 +60,7 @@ class PlacesListControllerImpl: UIViewController, PlacesListController {
         layout.minimumLineSpacing = 20;
         
         collectionView = UICollectionView(frame: self.view.frame, collectionViewLayout: layout)
-        collectionView?.register(PlaceCell.self, forCellWithReuseIdentifier: "Cell")
+        collectionView?.register(PlaceCell.self, forCellWithReuseIdentifier: PlaceCell.cellIdentifier)
         collectionView?.backgroundColor = .systemBackground
         
         collectionView?.dataSource = self
@@ -81,7 +81,7 @@ class PlacesListControllerImpl: UIViewController, PlacesListController {
     
     @objc
     private func updateData(_ sender: Any) {
-        self.collectionView?.reloadData()
+        presenter?.updateData()
         refreshControl.endRefreshing()
     }
     
@@ -108,7 +108,7 @@ extension PlacesListControllerImpl: UICollectionViewDelegate, UICollectionViewDa
     }
     
     func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
-        let myCell = collectionView.dequeueReusableCell(withReuseIdentifier: "Cell", for: indexPath) as! PlaceCell
+        let myCell = collectionView.dequeueReusableCell(withReuseIdentifier: PlaceCell.cellIdentifier, for: indexPath) as! PlaceCell
             
         let feature = presenter?.places?.features[indexPath.item]
         myCell.place = feature

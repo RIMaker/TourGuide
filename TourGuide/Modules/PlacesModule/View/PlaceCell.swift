@@ -9,6 +9,8 @@ import UIKit
 
 class PlaceCell: UICollectionViewCell {
     
+    static let cellIdentifier = "Cell"
+    
     var place: Feature? {
         didSet {
             if let place = place {
