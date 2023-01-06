@@ -9,12 +9,21 @@ import UIKit
 
 class PlaceCell: UICollectionViewCell {
     
-    var place: PlaceProperties? {
+    var place: Feature? {
         didSet {
-            if let place = place, let url = URL(string: place.image ?? "") {
+            if let place = place {
                 DispatchQueue.main.async {
-                    self.imageView.load(url: url)
-                    self.nameLabel.text = place.name
+                    self.nameLabel.text = place.properties?.name
+                }
+            }
+        }
+    }
+    
+    var distanceToUser: Int? {
+        didSet {
+            if let distanceToUser = distanceToUser {
+                DispatchQueue.main.async {
+                    self.distanceLabel.text = "\(distanceToUser.description) м."
                 }
             }
         }
@@ -23,9 +32,9 @@ class PlaceCell: UICollectionViewCell {
     private var imageView: UIImageView = {
         let img = UIImageView()
         img.translatesAutoresizingMaskIntoConstraints = false
-        img.contentMode = .scaleAspectFill
+        img.contentMode = .scaleAspectFit
         img.clipsToBounds = true
-        img.image = UIImage(systemName: SystemSymbol.places.rawValue)
+        img.image = UIImage(systemName: SystemSymbol.paperplane.rawValue)
         img.layer.cornerRadius = 12
         return img
     }()
@@ -33,27 +42,40 @@ class PlaceCell: UICollectionViewCell {
     private let nameLabel: UILabel = {
         let lbl = UILabel()
         lbl.translatesAutoresizingMaskIntoConstraints = false
-        lbl.numberOfLines = 0
-        lbl.text = "Hello, my name is James Arthur! What is your name? Hello, my name is James Arthur! What is your name?"
-        lbl.textAlignment = .center
+        lbl.numberOfLines = 2
+        lbl.text = ""
+        lbl.textAlignment = .left
         lbl.font = UIFont(name: "AppleSDGothicNeo-Bold", size: 17)
+        return lbl
+    }()
+    
+    private let distanceLabel: UILabel = {
+        let lbl = UILabel()
+        lbl.translatesAutoresizingMaskIntoConstraints = false
+        lbl.text = ""
+        lbl.textAlignment = .left
+        lbl.font = UIFont(name: "AppleSDGothicNeo-Thin", size: 15)
         return lbl
     }()
     
     override init(frame: CGRect) {
         super.init(frame: frame)
+        
         contentView.addSubview(imageView)
         contentView.addSubview(nameLabel)
+        contentView.addSubview(distanceLabel)
         
-        imageView.topAnchor.constraint(equalTo: contentView.topAnchor).isActive = true
-        imageView.leadingAnchor.constraint(equalTo: contentView.leadingAnchor).isActive = true
+        imageView.topAnchor.constraint(equalTo: contentView.topAnchor, constant: contentView.frame.height * 0.25).isActive = true
+        imageView.leadingAnchor.constraint(equalTo: contentView.leadingAnchor, constant: contentView.frame.width * 0.8).isActive = true
         imageView.trailingAnchor.constraint(equalTo: contentView.trailingAnchor).isActive = true
-        imageView.bottomAnchor.constraint(equalTo: contentView.bottomAnchor, constant: -contentView.frame.height * 0.3).isActive = true
+        imageView.bottomAnchor.constraint(equalTo: contentView.bottomAnchor, constant: -contentView.frame.height * 0.25).isActive = true
         
-        nameLabel.bottomAnchor.constraint(equalTo: contentView.bottomAnchor, constant: -10).isActive = true
-        nameLabel.trailingAnchor.constraint(equalTo: contentView.trailingAnchor, constant: -10).isActive = true
-        nameLabel.leftAnchor.constraint(equalTo: contentView.leftAnchor, constant: 10).isActive = true
-        nameLabel.topAnchor.constraint(equalTo:  imageView.bottomAnchor, constant: 10).isActive = true
+        nameLabel.trailingAnchor.constraint(equalTo: imageView.leadingAnchor, constant: -10).isActive = true
+        nameLabel.leadingAnchor.constraint(equalTo: contentView.leadingAnchor, constant: 20).isActive = true
+        nameLabel.topAnchor.constraint(equalTo:  contentView.topAnchor, constant: 15).isActive = true
+        
+        distanceLabel.bottomAnchor.constraint(equalTo: contentView.bottomAnchor, constant: -10).isActive = true
+        distanceLabel.leadingAnchor.constraint(equalTo: contentView.leadingAnchor, constant: 20).isActive = true
         
         contentView.backgroundColor = .secondarySystemBackground
         

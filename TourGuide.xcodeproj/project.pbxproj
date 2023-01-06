@@ -22,7 +22,6 @@
 		7C6C75E0294F5DA3008A6360 /* PlaceCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7C6C75DF294F5DA3008A6360 /* PlaceCell.swift */; };
 		7CAFB531295B78C200F00979 /* PlacesListVCPresenter.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7CAFB530295B78C200F00979 /* PlacesListVCPresenter.swift */; };
 		7CAFB534295CDDB400F00979 /* UIImageView+load.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7CAFB533295CDDB400F00979 /* UIImageView+load.swift */; };
-		7CAFB5362960472000F00979 /* LoadingReusableView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7CAFB5352960472000F00979 /* LoadingReusableView.swift */; };
 		7CF1BCEA2910252200DDFA22 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7CF1BCE92910252200DDFA22 /* AppDelegate.swift */; };
 		7CF1BCEC2910252200DDFA22 /* SceneDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7CF1BCEB2910252200DDFA22 /* SceneDelegate.swift */; };
 		7CF1BCF32910252200DDFA22 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 7CF1BCF22910252200DDFA22 /* Assets.xcassets */; };
@@ -52,7 +51,6 @@
 		7C6C75DF294F5DA3008A6360 /* PlaceCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PlaceCell.swift; sourceTree = "<group>"; };
 		7CAFB530295B78C200F00979 /* PlacesListVCPresenter.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PlacesListVCPresenter.swift; sourceTree = "<group>"; };
 		7CAFB533295CDDB400F00979 /* UIImageView+load.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "UIImageView+load.swift"; sourceTree = "<group>"; };
-		7CAFB5352960472000F00979 /* LoadingReusableView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LoadingReusableView.swift; sourceTree = "<group>"; };
 		7CF1BCE62910252200DDFA22 /* TourGuide.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = TourGuide.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		7CF1BCE92910252200DDFA22 /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		7CF1BCEB2910252200DDFA22 /* SceneDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SceneDelegate.swift; sourceTree = "<group>"; };
@@ -134,7 +132,6 @@
 			children = (
 				7C6C75DD294E249E008A6360 /* PlacesListController.swift */,
 				7C6C75DF294F5DA3008A6360 /* PlaceCell.swift */,
-				7CAFB5352960472000F00979 /* LoadingReusableView.swift */,
 			);
 			path = View;
 			sourceTree = "<group>";
@@ -389,7 +386,6 @@
 				7C1B4D2D294E1E2600543D9F /* WikipediaExtracts.swift in Sources */,
 				7C1B4D1C294E139700543D9F /* PlaceProperties.swift in Sources */,
 				7CF1BCEC2910252200DDFA22 /* SceneDelegate.swift in Sources */,
-				7CAFB5362960472000F00979 /* LoadingReusableView.swift in Sources */,
 				7C1B4D25294E1B8000543D9F /* Address.swift in Sources */,
 				7CF1BD14291068DD00DDFA22 /* MapVCPresenter.swift in Sources */,
 				7C1B4D29294E1D2100543D9F /* Sources.swift in Sources */,
@@ -542,6 +538,8 @@
 				DEVELOPMENT_TEAM = MYR4RY57UC;
 				GENERATE_INFOPLIST_FILE = YES;
 				INFOPLIST_FILE = TourGuide/Configuration/Info.plist;
+				INFOPLIST_KEY_NSLocationAlwaysUsageDescription = "";
+				INFOPLIST_KEY_NSLocationWhenInUseUsageDescription = "Разрешить определить ваше местоположение?";
 				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
 				INFOPLIST_KEY_UILaunchStoryboardName = LaunchScreen;
 				INFOPLIST_KEY_UIMainStoryboardFile = "";
@@ -571,6 +569,8 @@
 				DEVELOPMENT_TEAM = MYR4RY57UC;
 				GENERATE_INFOPLIST_FILE = YES;
 				INFOPLIST_FILE = TourGuide/Configuration/Info.plist;
+				INFOPLIST_KEY_NSLocationAlwaysUsageDescription = "";
+				INFOPLIST_KEY_NSLocationWhenInUseUsageDescription = "Разрешить определить ваше местоположение?";
 				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
 				INFOPLIST_KEY_UILaunchStoryboardName = LaunchScreen;
 				INFOPLIST_KEY_UIMainStoryboardFile = "";

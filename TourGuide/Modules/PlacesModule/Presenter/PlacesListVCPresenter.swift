@@ -6,14 +6,16 @@
 //
 
 import Foundation
+import MapKit
 
 protocol PlacesListVCPresenter {
-    var places: Places? { get set }
-    var placesProperties: [PlaceProperties] { get set }
+    var places: Places? { get }
     init(networkManager: NetworkManager, view: PlacesListController?)
     func viewShown()
-    func getPlaceProperties(withID id: String, completion: @escaping (PlaceProperties?)->())
-    func loadMoreData()
+    func startUpdatingLocation()
+    func searchCompleted(placemark: CLPlacemark)
+    func distanceToUser(fromPlace place: MKMapItem) -> Int
+    func stopUpdatingLocation()
 }
 
 class PlacesListVCPresenterImpl: PlacesListVCPresenter {
@@ -22,9 +24,9 @@ class PlacesListVCPresenterImpl: PlacesListVCPresenter {
     
     var places: Places?
     
-    var placesProperties = [PlaceProperties]()
-    
     weak var view: PlacesListController?
+    
+    private var userLocation: CLPlacemark?
     
     required init(networkManager: NetworkManager, view: PlacesListController? = nil) {
         self.networkManager = networkManager
@@ -34,42 +36,23 @@ class PlacesListVCPresenterImpl: PlacesListVCPresenter {
     func viewShown() {
         view?.setupViews()
         fetchData()
+        requestLocation()
     }
     
     func fetchData() {
+        view?.actIndStartAnimating()
         let url = APIProvider.shared.placesURL()
         networkManager.fetchData(Places.self, forURL: url) { [weak self] result in
             guard let self = self else { return }
             switch result {
-            case .success(let place):
-                self.places = place
-                self.loadMoreData()
+            case .success(let places):
+                DispatchQueue.main.async {
+                    self.places = places
+                    self.view?.actIndStopAnimating()
+                    self.view?.reloadData()
+                }
             case .failure(let error):
                 print(error)
-            }
-        }
-    }
-    
-    func loadMoreData() {
-        guard let view = view else { return }
-        if !view.isLoading {
-            if let places = places, placesProperties.count < places.features.count {
-                view.isLoading = true
-                let count = (places.features.count - placesProperties.count) >= 10 ? 10: (places.features.count - placesProperties.count)
-                let group = DispatchGroup()
-                for i in placesProperties.count..<(placesProperties.count+count) {
-                    group.enter()
-                    getPlaceProperties(withID: places.features[i].id ?? "") { [weak self] placeProperties in
-                        if let placeProperties = placeProperties {
-                            self?.placesProperties.append(placeProperties)
-                        }
-                        group.leave()
-                    }
-                }
-                group.notify(queue: .main) {
-                    self.view?.reloadData()
-                    view.isLoading = false
-                }
             }
         }
     }
@@ -85,5 +68,89 @@ class PlacesListVCPresenterImpl: PlacesListVCPresenter {
             }
         }
     }
+    
+    func distanceToUser(fromPlace place: MKMapItem) -> Int {
+        if let userLocation = userLocation?.location, let placeLoc = place.placemark.location {
+            return Int(userLocation.distance(from: placeLoc))
+        } else {
+            return 0
+        }
+    }
+    
+    func searchCompleted(placemark: CLPlacemark) {
+        userLocation = placemark
+        stopUpdatingLocation()
+        DispatchQueue.main.async {
+            self.view?.reloadData()
+        }
+    }
+    
+    func getLocation() {
+        if CLLocationManager.authorizationStatus() == .authorizedWhenInUse {
+            view?.locationManager.requestLocation()
+        }
+    }
+    
+    func startUpdatingLocation() {
+        DispatchQueue.global().async { [weak self] in
+            if CLLocationManager.locationServicesEnabled() {
+                self?.view?.locationManager.startUpdatingLocation()
+            }
+        }
+    }
+    
+    func requestLocation() {
+        if CLLocationManager.authorizationStatus() == .notDetermined {
+            view?.locationManager.requestWhenInUseAuthorization()
+        }
+        startUpdatingLocation()
+    }
+    
+    func stopUpdatingLocation() {
+        DispatchQueue.global().async { [weak self] in
+            if CLLocationManager.locationServicesEnabled() {
+                self?.view?.locationManager.stopUpdatingLocation()
+            }
+        }
+    }
+    
+    func getAddressFromLatLon(lat: Double, lon: Double, completion: @escaping (String)->()) {
+            var center : CLLocationCoordinate2D = CLLocationCoordinate2D()
+            
+            let ceo: CLGeocoder = CLGeocoder()
+            center.latitude = lat
+            center.longitude = lon
+
+            let loc: CLLocation = CLLocation(latitude:center.latitude, longitude: center.longitude)
+
+
+            ceo.reverseGeocodeLocation(loc, completionHandler:
+                {(placemarks, error) in
+                    if (error != nil)
+                    {
+                        completion("")
+                    }
+
+                    if let placemarks = placemarks, placemarks.count > 0 {
+                        let pm = placemarks[0]
+                        
+                        var addressString : String = ""
+                        if pm.thoroughfare != nil {
+                            addressString = addressString + pm.thoroughfare! + ", "
+                        }
+                        if pm.subLocality != nil {
+                            addressString = addressString + pm.subLocality! + ", "
+                        }
+                        if pm.locality != nil {
+                            addressString = addressString + pm.locality! + ""
+                        }
+
+                        completion(addressString)
+                    } else {
+                        completion("")
+                    }
+            })
+
+        }
     
 }
