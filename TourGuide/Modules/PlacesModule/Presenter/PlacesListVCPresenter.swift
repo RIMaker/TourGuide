@@ -9,9 +9,11 @@ import Foundation
 import MapKit
 
 protocol PlacesListVCPresenter {
+    var router: Router? { get }
     var places: Places? { get }
-    init(networkManager: NetworkManager, cacheManager: CacheManager, view: PlacesListController?)
+    init(networkManager: NetworkManager, cacheManager: CacheManager, view: PlacesListController?, router: Router?)
     func viewShown()
+    func tapOnThePlace(place: Feature)
     func updateData()
     func startUpdatingLocation()
     func searchCompleted(placemark: CLPlacemark)
@@ -23,6 +25,8 @@ class PlacesListVCPresenterImpl: PlacesListVCPresenter {
     
     var places: Places?
     
+    var router: Router?
+    
     private let networkManager: NetworkManager
     
     private weak var view: PlacesListController?
@@ -31,10 +35,11 @@ class PlacesListVCPresenterImpl: PlacesListVCPresenter {
     
     private let cacheManager: CacheManager
     
-    required init(networkManager: NetworkManager, cacheManager: CacheManager, view: PlacesListController? = nil) {
+    required init(networkManager: NetworkManager, cacheManager: CacheManager, view: PlacesListController?, router: Router?) {
         self.networkManager = networkManager
         self.cacheManager = cacheManager
         self.view = view
+        self.router = router
     }
     
     private func fetchData() {
@@ -110,6 +115,10 @@ class PlacesListVCPresenterImpl: PlacesListVCPresenter {
         view?.setupViews()
         fetchData()
         requestLocation()
+    }
+    
+    func tapOnThePlace(place: Feature) {
+        router?.showDetail(place: place)
     }
     
     func updateData() {

@@ -7,39 +7,27 @@
 
 import UIKit
 
-enum ScreenIdentifier {
-    case mainScreen
-    case launchScreen
-    case mapScreen
-    case placesList
-}
-
-
 protocol ViewFactory {
-    func makeView(for screenIdentifier: ScreenIdentifier) -> UIViewController?
+    func makeMainScreen() -> UIViewController
+    func makeLaunchScreen() -> UIViewController?
+    func makeMapScreen(title: String?, image: SystemSymbol?, router: Router) -> UIViewController
+    func makePlacesListScreen(title: String?, image: SystemSymbol?, router: Router) -> UIViewController
+    func makeDetailPlaceScreen(place: Feature?, router: Router) -> UIViewController
 }
 
 class ViewFactoryImpl: ViewFactory {
     
-    func makeView(for screenIdentifier: ScreenIdentifier) -> UIViewController? {
-        switch screenIdentifier {
-        case .mainScreen: return makeMainScreen()
-        case .launchScreen: return makeLaunchScreen()
-        case .mapScreen: return makeMapScreen()
-        case .placesList: return makePlacesListScreen()
-        }
-    }
-    
-}
-
-// MARK: - Supporting functions
-extension ViewFactoryImpl {
-    
     func makeMainScreen() -> UIViewController {
         let mainVC = MainViewControllerImpl()
+        let placesNavController = UINavigationController()
+        let mapNavController = UINavigationController()
+        let placesListRouter: Router = RouterPlacesListImpl(navController: placesNavController, viewFactory: self)
+        let mapRouter: Router = RouterMapImpl(navController: mapNavController, viewFactory: self)
+        placesListRouter.initialViewController()
+        mapRouter.initialViewController()
         mainVC.viewControllers = [
-            makeMapScreen(title: "Карта", image: .map),
-            makePlacesListScreen(title: "Места", image: .places)
+            mapNavController,
+            placesNavController
         ]
         return mainVC
     }
@@ -50,9 +38,9 @@ extension ViewFactoryImpl {
         return launchScreen
     }
     
-    func makeMapScreen(title: String? = nil, image: SystemSymbol? = nil) -> UIViewController {
+    func makeMapScreen(title: String? = nil, image: SystemSymbol? = nil, router: Router) -> UIViewController {
         let mapVC = MapViewControllerImpl()
-        let mapVCPresenter: MapVCPresenter = MapVCPresenterImpl(view: mapVC)
+        let mapVCPresenter: MapVCPresenter = MapVCPresenterImpl(view: mapVC, router: router)
         mapVC.presenter = mapVCPresenter
         mapVC.tabBarItem.title = title
         if let image = image {
@@ -61,19 +49,23 @@ extension ViewFactoryImpl {
         return mapVC
     }
     
-    func makePlacesListScreen(title: String? = nil, image: SystemSymbol? = nil) -> UIViewController {
+    func makePlacesListScreen(title: String? = nil, image: SystemSymbol? = nil, router: Router) -> UIViewController {
         let placesVC = PlacesListControllerImpl()
         let placesVCPresenter: PlacesListVCPresenter = PlacesListVCPresenterImpl(
             networkManager: NetworkManagerImpl(),
             cacheManager: CacheManagerImpl(),
-            view: placesVC)
+            view: placesVC,
+            router: router)
         placesVC.presenter = placesVCPresenter
         placesVC.tabBarItem.title = title
         if let image = image {
             placesVC.tabBarItem.image = UIImage(systemName: image.rawValue)
         }
-        let navController = UINavigationController(rootViewController: placesVC)
-        return navController
+        return placesVC
+    }
+    
+    func makeDetailPlaceScreen(place: Feature?, router: Router) -> UIViewController {
+        return UIViewController()
     }
     
 }
