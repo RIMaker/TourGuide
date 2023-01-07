@@ -8,15 +8,19 @@
 import Foundation
 
 protocol MapVCPresenter {
-    init(view: MapViewController?)
+    var router: Router? { get }
+    init(view: MapViewController?, router: Router?)
 }
 
 class MapVCPresenterImpl: MapVCPresenter {
     
+    var router: Router?
+    
     weak var view: MapViewController?
     
-    required init(view: MapViewController? = nil) {
+    required init(view: MapViewController?, router: Router?) {
         self.view = view
+        self.router = router
     }
     
 }

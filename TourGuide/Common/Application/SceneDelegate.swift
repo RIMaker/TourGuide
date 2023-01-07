@@ -28,11 +28,11 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
         
         window = UIWindow(frame: windowScene.coordinateSpace.bounds)
         window?.windowScene = windowScene
-        window?.rootViewController = viewFactory.makeView(for: .launchScreen)
+        window?.rootViewController = viewFactory.makeLaunchScreen()
         window?.makeKeyAndVisible()
         
         DispatchQueue.main.asyncAfter(deadline: .now() + 2) { [weak self] in
-            self?.window?.rootViewController = self?.viewFactory.makeView(for: .mainScreen)
+            self?.window?.rootViewController = self?.viewFactory.makeMainScreen()
         }
     }
 
