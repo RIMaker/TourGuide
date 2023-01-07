@@ -85,18 +85,6 @@ class PlacesListVCPresenterImpl: PlacesListVCPresenter {
         }
         return true
     }
-
-    private func getPlaceProperties(withID id: String, completion: @escaping (PlaceProperties?)->()) {
-        let url = APIProvider.shared.propertiesOfObjectURL(withId: id)
-        networkManager.fetchData(PlaceProperties.self, forURL: url) { result in
-            switch result {
-            case .success(let prop):
-                completion(prop)
-            case .failure(let error):
-                print(error)
-            }
-        }
-    }
     
     private func getLocation() {
         if CLLocationManager.authorizationStatus() == .authorizedWhenInUse {

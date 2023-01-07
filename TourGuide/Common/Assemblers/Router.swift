@@ -38,8 +38,8 @@ class RouterPlacesListImpl: Router {
     
     func showDetail(place: Feature?) {
         if let navController = navController {
-            guard let detailPlaceVC = viewFactory?.makeDetailPlaceScreen(place: place, router: self) else { return }
-            navController.pushViewController(detailPlaceVC, animated: true)
+            guard let placeDetailsVC = viewFactory?.makePlaceDetailsScreen(place: place, router: self) else { return }
+            navController.pushViewController(placeDetailsVC, animated: true)
         }
     }
     
