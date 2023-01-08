@@ -6,12 +6,14 @@
 //
 
 import Foundation
+import MapKit
 
 protocol PlaceDetailsPresenter {
     var router: Router? { get }
     var placeProperties: PlaceProperties? { get }
-    init(place: Feature?, networkManager: NetworkManager?, view: PlaceDetailsController?, router: Router?)
+    init(place: Feature?, userLocation: CLPlacemark?, networkManager: NetworkManager?, view: PlaceDetailsController?, router: Router?)
     func viewShown()
+    func distanceToUser(fromPlace place: MKMapItem) -> String?
 }
 
 class PlaceDetailsPresenterImpl: PlaceDetailsPresenter {
@@ -22,12 +24,15 @@ class PlaceDetailsPresenterImpl: PlaceDetailsPresenter {
     
     private var place: Feature?
     
+    private var userLocation: CLPlacemark?
+    
     private var view: PlaceDetailsController?
     
     private var networkManager: NetworkManager?
     
-    required init(place: Feature?, networkManager: NetworkManager?, view: PlaceDetailsController?, router: Router?) {
+    required init(place: Feature?, userLocation: CLPlacemark?, networkManager: NetworkManager?, view: PlaceDetailsController?, router: Router?) {
         self.place = place
+        self.userLocation = userLocation
         self.router = router
         self.view = view
         self.networkManager = networkManager
@@ -40,6 +45,14 @@ class PlaceDetailsPresenterImpl: PlaceDetailsPresenter {
                 self.placeProperties = placeProp
                 self.view?.reloadData()
             }
+        }
+    }
+    
+    func distanceToUser(fromPlace place: MKMapItem) -> String? {
+        if let userLocation = userLocation?.location, let placeLoc = place.placemark.location {
+            return "\(Int(userLocation.distance(from: placeLoc))) м."
+        } else {
+            return nil
         }
     }
     

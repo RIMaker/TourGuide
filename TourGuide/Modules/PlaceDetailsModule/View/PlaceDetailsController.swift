@@ -6,6 +6,7 @@
 //
 
 import UIKit
+import MapKit
 
 protocol PlaceDetailsController {
     func setupViews()
@@ -24,10 +25,12 @@ class PlaceDetailsControllerImpl: UIViewController, PlaceDetailsController {
     }
     
     func setupViews() {
+        navigationController?.navigationBar.prefersLargeTitles = false
+        navigationItem.title = "Информация об объекте"
         let view = UIView()
         view.frame = self.view.frame
         
-        tableView = UITableView(frame: self.view.frame)
+        tableView = UITableView(frame: view.frame)
         tableView?.dataSource = self
         tableView?.delegate = self
         tableView?.register(PlaceImageCell.self, forCellReuseIdentifier: PlaceImageCell.cellId)
@@ -78,7 +81,12 @@ extension PlaceDetailsControllerImpl: UITableViewDelegate, UITableViewDataSource
             return cell
         } else if indexPath.row == 3 {
             let cell = tableView.dequeueReusableCell(withIdentifier: InfoCell.cellId, for: indexPath) as! InfoCell
-            cell.info = ("РАССТОЯНИЕ ОТ ВАС","500 m.")
+            if let lat = presenter?.placeProperties?.point?.lat, let lon = presenter?.placeProperties?.point?.lon {
+                let placeMark = MKPlacemark(coordinate: CLLocationCoordinate2D(latitude: lat, longitude: lon))
+                cell.info = ("РАССТОЯНИЕ ОТ ВАС", presenter?.distanceToUser(fromPlace: MKMapItem(placemark: placeMark)))
+            } else {
+                cell.info = ("РАССТОЯНИЕ ОТ ВАС", nil)
+            }
             cell.selectionStyle = .none
             return cell
         } else if indexPath.row == 4 {
@@ -90,12 +98,5 @@ extension PlaceDetailsControllerImpl: UITableViewDelegate, UITableViewDataSource
             return UITableViewCell()
         }
     }
-    
-//    func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
-//        if indexPath.row == 0 {
-//            return 500
-//        }
-//        return 100
-//    }
     
 }

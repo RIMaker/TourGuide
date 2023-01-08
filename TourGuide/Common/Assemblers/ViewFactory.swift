@@ -6,13 +6,14 @@
 //
 
 import UIKit
+import MapKit
 
 protocol ViewFactory {
     func makeMainScreen() -> UIViewController
     func makeLaunchScreen() -> UIViewController?
     func makeMapScreen(title: String?, image: SystemSymbol?, router: Router) -> UIViewController
     func makePlacesListScreen(title: String?, image: SystemSymbol?, router: Router) -> UIViewController
-    func makePlaceDetailsScreen(place: Feature?, router: Router) -> UIViewController
+    func makePlaceDetailsScreen(place: Feature?,  userLocation: CLPlacemark?, router: Router) -> UIViewController
 }
 
 class ViewFactoryImpl: ViewFactory {
@@ -64,10 +65,11 @@ class ViewFactoryImpl: ViewFactory {
         return placesVC
     }
     
-    func makePlaceDetailsScreen(place: Feature?, router: Router) -> UIViewController {
+    func makePlaceDetailsScreen(place: Feature?, userLocation: CLPlacemark?, router: Router) -> UIViewController {
         let placesDetailsVC = PlaceDetailsControllerImpl()
         let placeDetailsVCPresenter: PlaceDetailsPresenter = PlaceDetailsPresenterImpl(
             place: place,
+            userLocation: userLocation,
             networkManager: NetworkManagerImpl(),
             view: placesDetailsVC,
             router: router)

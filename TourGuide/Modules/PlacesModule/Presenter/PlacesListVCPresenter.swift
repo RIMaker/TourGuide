@@ -9,11 +9,10 @@ import Foundation
 import MapKit
 
 protocol PlacesListVCPresenter {
-    var router: Router? { get }
     var places: Places? { get }
     init(networkManager: NetworkManager, cacheManager: CacheManager, view: PlacesListController?, router: Router?)
     func viewShown()
-    func tapOnThePlace(place: Feature)
+    func tapOnThePlace(place: Feature?)
     func updateData()
     func startUpdatingLocation()
     func searchCompleted(placemark: CLPlacemark)
@@ -25,13 +24,13 @@ class PlacesListVCPresenterImpl: PlacesListVCPresenter {
     
     var places: Places?
     
-    var router: Router?
+    private var userLocation: CLPlacemark?
+    
+    private var router: Router?
     
     private let networkManager: NetworkManager
     
     private weak var view: PlacesListController?
-    
-    private var userLocation: CLPlacemark?
     
     private let cacheManager: CacheManager
     
@@ -105,8 +104,8 @@ class PlacesListVCPresenterImpl: PlacesListVCPresenter {
         requestLocation()
     }
     
-    func tapOnThePlace(place: Feature) {
-        router?.showDetail(place: place)
+    func tapOnThePlace(place: Feature?) {
+        router?.showDetail(place: place, userLocation: userLocation)
     }
     
     func updateData() {
@@ -144,45 +143,6 @@ class PlacesListVCPresenterImpl: PlacesListVCPresenter {
                 self?.view?.locationManager.stopUpdatingLocation()
             }
         }
-    }
-    
-    func getAddressFromLatLon(lat: Double, lon: Double, completion: @escaping (String)->()) {
-        var center : CLLocationCoordinate2D = CLLocationCoordinate2D()
-        
-        let ceo: CLGeocoder = CLGeocoder()
-        center.latitude = lat
-        center.longitude = lon
-        
-        let loc: CLLocation = CLLocation(latitude:center.latitude, longitude: center.longitude)
-        
-        
-        ceo.reverseGeocodeLocation(loc, completionHandler:
-                                    {(placemarks, error) in
-            if (error != nil)
-            {
-                completion("")
-            }
-            
-            if let placemarks = placemarks, placemarks.count > 0 {
-                let pm = placemarks[0]
-                
-                var addressString : String = ""
-                if pm.thoroughfare != nil {
-                    addressString = addressString + pm.thoroughfare! + ", "
-                }
-                if pm.subLocality != nil {
-                    addressString = addressString + pm.subLocality! + ", "
-                }
-                if pm.locality != nil {
-                    addressString = addressString + pm.locality! + ""
-                }
-                
-                completion(addressString)
-            } else {
-                completion("")
-            }
-        })
-        
     }
     
 }
