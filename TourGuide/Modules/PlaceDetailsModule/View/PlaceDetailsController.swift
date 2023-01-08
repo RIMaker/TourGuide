@@ -62,6 +62,7 @@ extension PlaceDetailsControllerImpl: UITableViewDelegate, UITableViewDataSource
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         if indexPath.row == 0 {
             let cell = tableView.dequeueReusableCell(withIdentifier: PlaceImageCell.cellId, for: indexPath) as! PlaceImageCell
+            cell.delegate = presenter as? PlaceDetailsPresenterDelegate
             cell.selectionStyle = .none
             cell.imageURL = presenter?.placeProperties?.preview?.source
             return cell

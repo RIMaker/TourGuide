@@ -11,6 +11,8 @@ class PlaceImageCell: UITableViewCell {
     
     static let cellId = "ImageCell"
     
+    var delegate: PlaceDetailsPresenterDelegate?
+    
     var imageURL: String? {
         didSet {
             if let imageURL = imageURL, let url = URL(string: imageURL) {
@@ -36,12 +38,22 @@ class PlaceImageCell: UITableViewCell {
         imgView.clipsToBounds = true
         return imgView
     }()
+    
+    @objc
+    private func makeRoute(_ sender: UITapGestureRecognizer) {
+        let point = sender.location(in: routeImage)
+        if point.x >= 0 && point.y >= 0 {
+            delegate?.makeRoute()
+        }
+    }
 
     override init(style: UITableViewCell.CellStyle, reuseIdentifier: String?) {
         super.init(style: style, reuseIdentifier: reuseIdentifier)
         
         addSubview(placeImage)
         addSubview(routeImage)
+        let tapGestureRecognizer = UITapGestureRecognizer(target: self, action: #selector(makeRoute(_:)))
+        addGestureRecognizer(tapGestureRecognizer)
         
         placeImage.topAnchor.constraint(equalTo: topAnchor).isActive = true
         placeImage.bottomAnchor.constraint(equalTo: bottomAnchor).isActive = true
@@ -51,7 +63,7 @@ class PlaceImageCell: UITableViewCell {
         placeImage.heightAnchor.constraint(equalToConstant: 350).isActive = true
         
         routeImage.trailingAnchor.constraint(equalTo: placeImage.trailingAnchor, constant: -10).isActive = true
-        routeImage.bottomAnchor.constraint(equalTo: placeImage.bottomAnchor, constant: 30).isActive = true
+        routeImage.bottomAnchor.constraint(equalTo: placeImage.bottomAnchor, constant: 20).isActive = true
         routeImage.widthAnchor.constraint(equalToConstant: 100).isActive = true
         routeImage.heightAnchor.constraint(equalToConstant: 100).isActive = true
     }

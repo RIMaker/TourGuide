@@ -8,6 +8,10 @@
 import Foundation
 import MapKit
 
+protocol PlaceDetailsPresenterDelegate {
+    func makeRoute()
+}
+
 protocol PlaceDetailsPresenter {
     var router: Router? { get }
     var placeProperties: PlaceProperties? { get }
@@ -69,5 +73,12 @@ class PlaceDetailsPresenterImpl: PlaceDetailsPresenter {
         }
     }
     
+}
+
+extension PlaceDetailsPresenterImpl: PlaceDetailsPresenterDelegate {
+    
+    func makeRoute() {
+        print("tapped")
+    }
     
 }
