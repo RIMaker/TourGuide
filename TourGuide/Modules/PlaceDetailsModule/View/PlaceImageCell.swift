@@ -26,17 +26,34 @@ class PlaceImageCell: UITableViewCell {
         imgView.clipsToBounds = true
         return imgView
     }()
+    
+    private var routeImage: UIImageView = {
+        let imgView = UIImageView(image: UIImage(systemName: SystemSymbol.paperplaneCircle.rawValue))
+        imgView.translatesAutoresizingMaskIntoConstraints = false
+        imgView.contentMode = .scaleAspectFill
+        imgView.backgroundColor = UIColor(red: 46/255, green: 46/255, blue: 46/255, alpha: 0.9)
+        imgView.layer.cornerRadius = 100 / 2
+        imgView.clipsToBounds = true
+        return imgView
+    }()
 
     override init(style: UITableViewCell.CellStyle, reuseIdentifier: String?) {
         super.init(style: style, reuseIdentifier: reuseIdentifier)
         
         addSubview(placeImage)
+        addSubview(routeImage)
+        
         placeImage.topAnchor.constraint(equalTo: topAnchor).isActive = true
         placeImage.bottomAnchor.constraint(equalTo: bottomAnchor).isActive = true
         placeImage.leadingAnchor.constraint(equalTo: leadingAnchor).isActive = true
         placeImage.trailingAnchor.constraint(equalTo: trailingAnchor).isActive = true
         placeImage.widthAnchor.constraint(equalTo: widthAnchor).isActive = true
         placeImage.heightAnchor.constraint(equalToConstant: 350).isActive = true
+        
+        routeImage.trailingAnchor.constraint(equalTo: placeImage.trailingAnchor, constant: -10).isActive = true
+        routeImage.bottomAnchor.constraint(equalTo: placeImage.bottomAnchor, constant: 30).isActive = true
+        routeImage.widthAnchor.constraint(equalToConstant: 100).isActive = true
+        routeImage.heightAnchor.constraint(equalToConstant: 100).isActive = true
     }
     
     required init?(coder aDecoder: NSCoder) {
