@@ -20,7 +20,7 @@ class PlacesListControllerImpl: UIViewController, PlacesListController {
     
     var locationManager = CLLocationManager()
     
-    var presenter: PlacesListVCPresenter?
+    var presenter: PlacesListPresenter?
     
     private var collectionView: UICollectionView?
     

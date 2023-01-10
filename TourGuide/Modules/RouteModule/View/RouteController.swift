@@ -1,20 +1,20 @@
 //
-//  MainViewController.swift
+//  RouteController.swift
 //  TourGuide
 //
-//  Created by Zhora Agadzhanyan on 31.10.2022.
+//  Created by Zhora Agadzhanyan on 10.01.2023.
 //
 
 import UIKit
 import MapKit
 
-protocol MapViewController: AnyObject {
+protocol RouteController: AnyObject {
     
 }
 
-class MapViewControllerImpl: UIViewController, MapViewController {
+class RouteControllerImpl: UIViewController, RouteController {
     
-    var presenter: MapPresenter?
+    var presenter: RoutePresenter?
     
     lazy var mapView: MKMapView = {
         let map = MKMapView()
@@ -23,7 +23,7 @@ class MapViewControllerImpl: UIViewController, MapViewController {
 
     override func viewDidLoad() {
         super.viewDidLoad()
-       
+
         view.addSubview(mapView)
         
         mapView.translatesAutoresizingMaskIntoConstraints = false
@@ -31,6 +31,7 @@ class MapViewControllerImpl: UIViewController, MapViewController {
         mapView.bottomAnchor.constraint(equalTo: view.bottomAnchor).isActive = true
         mapView.leftAnchor.constraint(equalTo: view.leftAnchor).isActive = true
         mapView.rightAnchor.constraint(equalTo: view.rightAnchor).isActive = true
+        
     }
 
 }
