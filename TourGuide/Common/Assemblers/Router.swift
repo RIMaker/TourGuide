@@ -14,6 +14,14 @@ protocol RouterBase {
     func popToRoot()
 }
 
+extension RouterBase {
+    func popToRoot() {
+        if let navController = navController {
+            navController.popToRootViewController(animated: true)
+        }
+    }
+}
+
 // MARK: RouterPlacesList
 protocol RouterPlacesListScreen: RouterBase {
     func initialViewController()
@@ -24,11 +32,7 @@ protocol RouterPlaceDetailsScreen: RouterBase {
     func makeRoute(place: Feature?)
 }
 
-protocol RouterRouteScreen: RouterBase {
-    
-}
-
-class RouterPlacesListImpl: RouterPlacesListScreen, RouterPlaceDetailsScreen, RouterRouteScreen {
+class RouterPlacesListImpl: RouterPlacesListScreen, RouterPlaceDetailsScreen {
     
     var navController: UINavigationController?
     
@@ -46,12 +50,6 @@ class RouterPlacesListImpl: RouterPlacesListScreen, RouterPlaceDetailsScreen, Ro
         }
     }
     
-    func popToRoot() {
-        if let navController = navController {
-            navController.popToRootViewController(animated: true)
-        }
-    }
-    
     func showDetail(place: Feature?, userLocation: CLPlacemark?) {
         if let navController = navController {
             guard let placeDetailsVC = viewFactory?.makePlaceDetailsScreen(place: place, userLocation: userLocation, router: self) else { return }
@@ -61,7 +59,7 @@ class RouterPlacesListImpl: RouterPlacesListScreen, RouterPlaceDetailsScreen, Ro
     
     func makeRoute(place: Feature?) {
         if let navController = navController {
-            guard let placeDetailsVC = viewFactory?.makeRouteScreen(place: place, router: self) else { return }
+            guard let placeDetailsVC = viewFactory?.makeRouteScreen(place: place) else { return }
             navController.present(placeDetailsVC, animated: true)
         }
     }
@@ -89,12 +87,6 @@ class RouterMapImpl: RouterMap {
         if let navController = navController {
             guard let mapVC = viewFactory?.makeMapScreen(title: "Карта", image: .map, router: self) else { return }
             navController.viewControllers = [mapVC]
-        }
-    }
-    
-    func popToRoot() {
-        if let navController = navController {
-            navController.popToRootViewController(animated: true)
         }
     }
     

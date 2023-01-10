@@ -12,4 +12,5 @@ enum SystemSymbol: String {
     case places = "globe.central.south.asia.fill"
     case paperplane = "paperplane"
     case paperplaneCircle = "paperplane.circle.fill"
+    case close = "x.circle"
 }

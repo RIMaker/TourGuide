@@ -33,7 +33,7 @@ class PlaceImageCell: UITableViewCell {
         let imgView = UIImageView(image: UIImage(systemName: SystemSymbol.paperplaneCircle.rawValue))
         imgView.translatesAutoresizingMaskIntoConstraints = false
         imgView.contentMode = .scaleAspectFill
-        imgView.backgroundColor = UIColor(red: 46/255, green: 46/255, blue: 46/255, alpha: 0.9)
+        imgView.backgroundColor = UIColor(named: "MakeRouteColor")
         imgView.layer.cornerRadius = 100 / 2
         imgView.clipsToBounds = true
         return imgView

@@ -8,21 +8,17 @@
 import Foundation
 
 protocol RoutePresenter {
-    var router: RouterRouteScreen? { get }
-    init(place: Feature?, view: RouteController?, router: RouterRouteScreen?)
+    init(place: Feature?, view: RouteController?)
 }
 
 class RoutePresenterImpl: RoutePresenter {
     
     var place: Feature?
     
-    var router: RouterRouteScreen?
-    
     private weak var view: RouteController?
     
-    required init(place: Feature?, view: RouteController?, router: RouterRouteScreen?) {
+    required init(place: Feature?, view: RouteController?) {
         self.view = view
-        self.router = router
         self.place = place
     }
     
