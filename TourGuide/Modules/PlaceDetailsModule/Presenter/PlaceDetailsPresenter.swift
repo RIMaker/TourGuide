@@ -78,7 +78,7 @@ class PlaceDetailsPresenterImpl: PlaceDetailsPresenter {
 extension PlaceDetailsPresenterImpl: PlaceDetailsPresenterDelegate {
     
     func makeRoute() {
-        router?.makeRoute(place: place)
+        router?.makeRoute(place: placeProperties)
     }
     
 }

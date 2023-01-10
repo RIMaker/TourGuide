@@ -14,7 +14,7 @@ protocol ViewFactory {
     func makeMapScreen(title: String?, image: SystemSymbol?, router: RouterMap) -> UIViewController
     func makePlacesListScreen(title: String?, image: SystemSymbol?, router: RouterPlacesListScreen) -> UIViewController
     func makePlaceDetailsScreen(place: Feature?,  userLocation: CLPlacemark?, router: RouterPlaceDetailsScreen) -> UIViewController
-    func makeRouteScreen(place: Feature?) -> UIViewController
+    func makeRouteScreen(place: PlaceProperties?) -> UIViewController
 }
 
 class ViewFactoryImpl: ViewFactory {
@@ -78,7 +78,7 @@ class ViewFactoryImpl: ViewFactory {
         return placesDetailsVC
     }
     
-    func makeRouteScreen(place: Feature?) -> UIViewController {
+    func makeRouteScreen(place: PlaceProperties?) -> UIViewController {
         let routeVC = RouteControllerImpl()
         let routeVCPresenter: RoutePresenter = RoutePresenterImpl(
             place: place,

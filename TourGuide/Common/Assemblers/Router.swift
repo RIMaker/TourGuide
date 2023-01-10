@@ -29,7 +29,7 @@ protocol RouterPlacesListScreen: RouterBase {
 }
 
 protocol RouterPlaceDetailsScreen: RouterBase {
-    func makeRoute(place: Feature?)
+    func makeRoute(place: PlaceProperties?)
 }
 
 class RouterPlacesListImpl: RouterPlacesListScreen, RouterPlaceDetailsScreen {
@@ -57,7 +57,7 @@ class RouterPlacesListImpl: RouterPlacesListScreen, RouterPlaceDetailsScreen {
         }
     }
     
-    func makeRoute(place: Feature?) {
+    func makeRoute(place: PlaceProperties?) {
         if let navController = navController {
             guard let placeDetailsVC = viewFactory?.makeRouteScreen(place: place) else { return }
             navController.present(placeDetailsVC, animated: true)
