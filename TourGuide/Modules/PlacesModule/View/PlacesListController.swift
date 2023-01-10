@@ -24,17 +24,13 @@ class PlacesListControllerImpl: UIViewController, PlacesListController {
     
     private var collectionView: UICollectionView?
     
-    private let refreshControl: UIRefreshControl = {
-        let refreshCntrl = UIRefreshControl()
-        return refreshCntrl
-    }()
-    
     private let activityIndicator: UIActivityIndicatorView = {
         let actInd = UIActivityIndicatorView()
         actInd.translatesAutoresizingMaskIntoConstraints = false
+        actInd.isHidden = true
         actInd.style = .large
-        actInd.startAnimating()
         actInd.hidesWhenStopped = true
+        actInd.startAnimating()
         return actInd
     }()
     
@@ -43,29 +39,26 @@ class PlacesListControllerImpl: UIViewController, PlacesListController {
         presenter?.viewShown()
     }
     
-    override func viewDidAppear(_ animated: Bool) {
-        super.viewDidAppear(animated)
-        activityIndicator.center = view.center
-    }
-    
     func setupViews() {
+        navigationController?.navigationBar.prefersLargeTitles = false
+        navigationItem.title = "Места"
         let view = UIView()
         view.frame = self.view.frame
                 
         let layout: UICollectionViewFlowLayout = UICollectionViewFlowLayout()
         layout.sectionInset = UIEdgeInsets(top: 20, left: 18, bottom: 20, right: 18)
         layout.itemSize = CGSize(width: view.frame.size.width - 20, height: 87)
-        layout.footerReferenceSize = CGSize(width: view.frame.width, height: 55)
         layout.scrollDirection = .vertical
         layout.minimumLineSpacing = 20;
         
-        collectionView = UICollectionView(frame: self.view.frame, collectionViewLayout: layout)
+        collectionView = UICollectionView(frame: view.frame, collectionViewLayout: layout)
         collectionView?.register(PlaceCell.self, forCellWithReuseIdentifier: PlaceCell.cellIdentifier)
         collectionView?.backgroundColor = .systemBackground
         
         collectionView?.dataSource = self
         collectionView?.delegate = self
         
+        let refreshControl = UIRefreshControl()
         refreshControl.attributedTitle = NSAttributedString(string: "Pull to refresh")
         refreshControl.addTarget(self, action: #selector(updateData(_:)), for: .valueChanged)
         collectionView?.refreshControl = refreshControl
@@ -77,16 +70,28 @@ class PlacesListControllerImpl: UIViewController, PlacesListController {
         view.addSubview(activityIndicator)
             
         self.view = view
+        
+        activityIndicator.centerXAnchor.constraint(
+            equalTo: self.view.centerXAnchor
+        ).isActive = true
+        activityIndicator.centerYAnchor.constraint(
+            equalTo: self.view.centerYAnchor,
+            constant: -(navigationController?.navigationBar.frame.height ?? 0)
+        ).isActive = true
     }
     
     @objc
     private func updateData(_ sender: Any) {
         presenter?.updateData()
-        refreshControl.endRefreshing()
+        DispatchQueue.main.async {
+            self.collectionView?.refreshControl?.endRefreshing()
+        }
     }
     
     func reloadData() {
-        self.collectionView?.reloadData()
+        if let collectionView = collectionView {
+            self.collectionView?.reloadItems(at: collectionView.indexPathsForVisibleItems)
+        }
     }
     
     func actIndStopAnimating() {
@@ -117,6 +122,10 @@ extension PlacesListControllerImpl: UICollectionViewDelegate, UICollectionViewDa
             myCell.distanceToUser = presenter?.distanceToUser(fromPlace: MKMapItem(placemark: placeMark))
         }
         return myCell
+    }
+    
+    func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
+        presenter?.tapOnThePlace(place: presenter?.places?.features[indexPath.item])
     }
 }
 

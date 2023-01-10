@@ -6,6 +6,7 @@
 //
 
 import UIKit
+import MapKit
 
 protocol RouterBase {
     var navController: UINavigationController? { get set }
@@ -14,7 +15,7 @@ protocol RouterBase {
 
 protocol Router: RouterBase {
     func initialViewController()
-    func showDetail(place: Feature?)
+    func showDetail(place: Feature?, userLocation: CLPlacemark?)
     func popToRoot()
 }
 
@@ -36,10 +37,10 @@ class RouterPlacesListImpl: Router {
         }
     }
     
-    func showDetail(place: Feature?) {
+    func showDetail(place: Feature?, userLocation: CLPlacemark?) {
         if let navController = navController {
-            guard let detailPlaceVC = viewFactory?.makeDetailPlaceScreen(place: place, router: self) else { return }
-            navController.pushViewController(detailPlaceVC, animated: true)
+            guard let placeDetailsVC = viewFactory?.makePlaceDetailsScreen(place: place, userLocation: userLocation, router: self) else { return }
+            navController.pushViewController(placeDetailsVC, animated: true)
         }
     }
     
@@ -70,7 +71,7 @@ class RouterMapImpl: Router {
         }
     }
     
-    func showDetail(place: Feature?) {
+    func showDetail(place: Feature?, userLocation: CLPlacemark?) {
 //        if let navController = navController {
 //            guard let detailPlaceVC = viewFactory?.makeDetailPlaceScreen(place: place, router: self) else { return }
 //            navController.pushViewController(detailPlaceVC, animated: true)
