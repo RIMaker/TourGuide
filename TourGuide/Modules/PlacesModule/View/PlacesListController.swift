@@ -83,8 +83,8 @@ class PlacesListControllerImpl: UIViewController, PlacesListController {
     @objc
     private func updateData(_ sender: Any) {
         presenter?.updateData()
-        DispatchQueue.main.async {
-            self.collectionView?.refreshControl?.endRefreshing()
+        DispatchQueue.main.async { [weak self] in
+            self?.collectionView?.refreshControl?.endRefreshing()
         }
     }
     

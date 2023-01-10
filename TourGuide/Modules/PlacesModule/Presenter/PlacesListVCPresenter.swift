@@ -42,8 +42,8 @@ class PlacesListVCPresenterImpl: PlacesListVCPresenter {
     }
     
     private func fetchData() {
-        DispatchQueue.main.async {
-            self.view?.actIndStartAnimating()
+        DispatchQueue.main.async { [weak self] in
+            self?.view?.actIndStartAnimating()
         }
         if shouldUpdateData() {
             let url = APIProvider.shared.placesURL()
@@ -65,9 +65,9 @@ class PlacesListVCPresenterImpl: PlacesListVCPresenter {
             }
         } else {
             self.places = cacheManager.cachedData()
-            DispatchQueue.main.asyncAfter(deadline: .now() + 0.3) {
-                self.view?.actIndStopAnimating()
-                self.view?.reloadData()
+            DispatchQueue.main.asyncAfter(deadline: .now() + 0.3) { [weak self] in
+                self?.view?.actIndStopAnimating()
+                self?.view?.reloadData()
             }
         }
     }
@@ -124,8 +124,8 @@ class PlacesListVCPresenterImpl: PlacesListVCPresenter {
     func searchCompleted(placemark: CLPlacemark) {
         userLocation = placemark
         stopUpdatingLocation()
-        DispatchQueue.main.async {
-            self.view?.reloadData()
+        DispatchQueue.main.async { [weak self] in
+            self?.view?.reloadData()
         }
     }
     

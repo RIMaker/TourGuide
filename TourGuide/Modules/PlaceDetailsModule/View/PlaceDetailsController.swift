@@ -46,8 +46,8 @@ class PlaceDetailsControllerImpl: UIViewController, PlaceDetailsController {
     }
     
     func reloadData() {
-        DispatchQueue.main.async {
-            self.tableView?.reloadData()
+        DispatchQueue.main.async { [weak self] in
+            self?.tableView?.reloadData()
         }
     }
 }

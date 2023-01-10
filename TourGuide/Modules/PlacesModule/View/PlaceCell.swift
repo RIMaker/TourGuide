@@ -14,8 +14,8 @@ class PlaceCell: UICollectionViewCell {
     var place: Feature? {
         didSet {
             if let place = place {
-                DispatchQueue.main.async {
-                    self.nameLabel.text = place.properties?.name
+                DispatchQueue.main.async { [weak self] in
+                    self?.nameLabel.text = place.properties?.name
                 }
             }
         }
@@ -24,8 +24,8 @@ class PlaceCell: UICollectionViewCell {
     var distanceToUser: Int? {
         didSet {
             if let distanceToUser = distanceToUser {
-                DispatchQueue.main.async {
-                    self.distanceLabel.text = "\(distanceToUser.description) м."
+                DispatchQueue.main.async { [weak self] in
+                    self?.distanceLabel.text = "\(distanceToUser.description) м."
                 }
             }
         }
