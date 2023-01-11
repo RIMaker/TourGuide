@@ -9,22 +9,12 @@ import UIKit
 import MapKit
 
 protocol RouteController: AnyObject {
-    var locationManager: CLLocationManager { get }
     func setupViews()
-    func showAnnotation(annotation: MKPointAnnotation)
-    func showUserLocationTrue()
-    func resetMapView(withDirections directions: MKDirections)
-    func getCenterLocation() -> CLLocation
-    func setRegion(region: MKCoordinateRegion)
-    func addDirectionInMap(route: MKRoute)
-    func showAlert(title: String, message: String)
 }
 
 class RouteControllerImpl: UIViewController, RouteController {
     
     var presenter: RoutePresenter?
-    
-    var locationManager = CLLocationManager()
     
     private let annotationID = "AnnotationID"
     
@@ -69,13 +59,14 @@ class RouteControllerImpl: UIViewController, RouteController {
     override func viewDidLoad() {
         super.viewDidLoad()
 
-        presenter?.viewShown()
+        presenter?.viewShown(mapView: mapView)
     }
     
     func setupViews() {
-        locationManager.delegate = self
-        locationManager.desiredAccuracy = kCLLocationAccuracyBest
         mapView.delegate = self
+        presenter?.mapManager?.checkLocationServices {
+            presenter?.mapManager?.locationManager.delegate = self
+        }
         
         view.addSubview(mapView)
         view.addSubview(closeButton)
@@ -113,54 +104,6 @@ class RouteControllerImpl: UIViewController, RouteController {
         makeRouteButton.addGestureRecognizer(tapGestureRecognizerOfMakeRouteButton)
     }
     
-    func showAnnotation(annotation: MKPointAnnotation) {
-        DispatchQueue.main.async { [weak self] in
-            self?.mapView.showAnnotations([annotation], animated: true)
-            self?.mapView.selectAnnotation(annotation, animated: true)
-        }
-    }
-    
-    func resetMapView(withDirections directions: MKDirections) {
-        mapView.removeOverlays(mapView.overlays)
-        presenter?.directionsArray.append(directions)
-        let _ = presenter?.directionsArray.map { $0.cancel() }
-        presenter?.directionsArray.removeAll()
-    }
-    
-    func getCenterLocation() -> CLLocation {
-        let latitude = mapView.centerCoordinate.latitude
-        let longitude = mapView.centerCoordinate.longitude
-        
-        return CLLocation(latitude: latitude, longitude: longitude)
-    }
-    
-    func showUserLocationTrue() {
-        mapView.showsUserLocation = true
-    }
-    
-    func setRegion(region: MKCoordinateRegion) {
-        DispatchQueue.main.async { [weak self] in
-            self?.mapView.setRegion(region, animated: true)
-        }
-    }
-    
-    func addDirectionInMap(route: MKRoute) {
-        mapView.addOverlay(route.polyline)
-        mapView.setVisibleMapRect(route.polyline.boundingMapRect, animated: true)
-        
-        let distance = String(format: "%.1f", route.distance / 1000)
-        let timeInterval = route.expectedTravelTime
-        print("Расстояние \(distance)")
-        print("time \(timeInterval)")
-    }
-    
-    func showAlert(title: String, message: String) {
-        let alert = UIAlertController(title: title, message: message, preferredStyle: .alert)
-        let action = UIAlertAction(title: "OK", style: .default)
-        alert.addAction(action)
-        present(alert, animated: true)
-    }
-    
     @objc
     private func close(_ sender: UIButton) {
         dismiss(animated: true)
@@ -168,7 +111,7 @@ class RouteControllerImpl: UIViewController, RouteController {
     
     @objc
     private func setCenterToUserLocation(_ sender: UIButton) {
-        presenter?.showUserLocation()
+        presenter?.mapManager?.showUserLocation()
     }
     
     @objc
@@ -176,7 +119,7 @@ class RouteControllerImpl: UIViewController, RouteController {
         DispatchQueue.main.async { [weak self] in
             self?.makeRouteButton.isHidden = true
         }
-        presenter?.getDirections()
+        presenter?.mapManager?.getDirections(place: presenter?.place)
     }
 
 }
@@ -202,17 +145,6 @@ extension RouteControllerImpl: MKMapViewDelegate {
         return annotationView
     }
     
-    func mapView(_ mapView: MKMapView, regionDidChangeAnimated animated: Bool) {
-
-        let geocoder = CLGeocoder()
-        if presenter?.previousLocation != nil {
-            DispatchQueue.main.asyncAfter(deadline: .now() + 3) { [weak self] in
-                self?.presenter?.showUserLocation()
-            }
-        }
-        geocoder.cancelGeocode()
-    }
-    
     func mapView(_ mapView: MKMapView, rendererFor overlay: MKOverlay) -> MKOverlayRenderer {
         let renderer = MKPolylineRenderer(overlay: overlay as! MKPolyline)
         renderer.strokeColor = .blue
@@ -222,6 +154,6 @@ extension RouteControllerImpl: MKMapViewDelegate {
 
 extension RouteControllerImpl: CLLocationManagerDelegate {
     func locationManagerDidChangeAuthorization(_ manager: CLLocationManager) {
-        presenter?.checkLocationAuthorization()
+        presenter?.mapManager?.checkLocationAuthorization()
     }
 }

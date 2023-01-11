@@ -81,8 +81,10 @@ class ViewFactoryImpl: ViewFactory {
     
     func makeRouteScreen(place: PlaceProperties?) -> UIViewController {
         let routeVC = RouteControllerImpl()
+        let mapManager = MapManager()
         let routeVCPresenter: RoutePresenter = RoutePresenterImpl(
             place: place,
+            mapManager: mapManager,
             view: routeVC)
         routeVC.presenter = routeVCPresenter
         return routeVC
