@@ -15,4 +15,5 @@ enum SystemSymbol: String {
     case close = "x.circle"
     case makeRouteByFoot = "figure.walk.circle.fill"
     case makeRouteByCar = "car.circle.fill"
+    case userLocation = "location.circle.fill"
 }

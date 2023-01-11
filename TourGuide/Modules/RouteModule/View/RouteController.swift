@@ -22,9 +22,11 @@ class RouteControllerImpl: UIViewController, RouteController {
         let btn = UIImageView()
         btn.translatesAutoresizingMaskIntoConstraints = false
         btn.contentMode = .scaleAspectFill
+        btn.layer.cornerRadius = 25
         btn.clipsToBounds = true
         btn.image = UIImage(systemName: SystemSymbol.close.rawValue)
-        btn.tintColor = UIColor(named: "CloseButtonColor")
+        btn.backgroundColor = .init(white: 1, alpha: 0.8)
+        btn.tintColor = .black
         return btn
     }()
     
@@ -40,8 +42,9 @@ class RouteControllerImpl: UIViewController, RouteController {
         btn.contentMode = .scaleAspectFill
         btn.layer.cornerRadius = 35
         btn.clipsToBounds = true
-        btn.image = UIImage(systemName: SystemSymbol.paperplaneCircle.rawValue)
-        btn.backgroundColor = UIColor(named: "PaperplaneColor")
+        btn.image = UIImage(systemName: SystemSymbol.userLocation.rawValue)
+        btn.backgroundColor = .init(white: 1, alpha: 0.8)
+        btn.tintColor = .black
         return btn
     }()
     
@@ -52,6 +55,7 @@ class RouteControllerImpl: UIViewController, RouteController {
         btn.layer.cornerRadius = 50
         btn.clipsToBounds = true
         btn.image = UIImage(systemName: SystemSymbol.makeRouteByFoot.rawValue)
+        btn.tintColor = .black
         return btn
     }()
     
@@ -62,6 +66,7 @@ class RouteControllerImpl: UIViewController, RouteController {
         btn.layer.cornerRadius = 50
         btn.clipsToBounds = true
         btn.image = UIImage(systemName: SystemSymbol.makeRouteByCar.rawValue)
+        btn.tintColor = .black
         return btn
     }()
     
@@ -74,7 +79,7 @@ class RouteControllerImpl: UIViewController, RouteController {
         hStack.distribution = .fillEqually
         hStack.alignment = .center
         hStack.axis = .horizontal
-        hStack.backgroundColor = UIColor(named: "PaperplaneColor")
+        hStack.backgroundColor = .init(white: 1, alpha: 0.8)
         return hStack
     }()
     

@@ -31,10 +31,9 @@ class PlaceImageCell: UITableViewCell {
     }()
     
     private var routeImage: UIImageView = {
-        let imgView = UIImageView(image: UIImage(systemName: SystemSymbol.paperplaneCircle.rawValue))
+        let imgView = UIImageView(image: UIImage(named: "map"))
         imgView.translatesAutoresizingMaskIntoConstraints = false
         imgView.contentMode = .scaleAspectFill
-        imgView.backgroundColor = UIColor(named: "PaperplaneColor")
         imgView.layer.cornerRadius = 100 / 2
         imgView.clipsToBounds = true
         return imgView
