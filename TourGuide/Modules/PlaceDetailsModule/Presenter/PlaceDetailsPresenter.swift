@@ -13,16 +13,16 @@ protocol PlaceDetailsPresenterDelegate {
 }
 
 protocol PlaceDetailsPresenter {
-    var router: Router? { get }
+    var router: RouterPlaceDetailsScreen? { get }
     var placeProperties: PlaceProperties? { get }
-    init(place: Feature?, userLocation: CLPlacemark?, networkManager: NetworkManager?, view: PlaceDetailsController?, router: Router?)
+    init(place: Feature?, userLocation: CLPlacemark?, networkManager: NetworkManager?, view: PlaceDetailsController?, router: RouterPlaceDetailsScreen?)
     func viewShown()
     func distanceToUser(fromPlace place: MKMapItem) -> String?
 }
 
 class PlaceDetailsPresenterImpl: PlaceDetailsPresenter {
     
-    var router: Router?
+    var router: RouterPlaceDetailsScreen?
     
     var placeProperties: PlaceProperties?
     
@@ -34,7 +34,7 @@ class PlaceDetailsPresenterImpl: PlaceDetailsPresenter {
     
     private var networkManager: NetworkManager?
     
-    required init(place: Feature?, userLocation: CLPlacemark?, networkManager: NetworkManager?, view: PlaceDetailsController?, router: Router?) {
+    required init(place: Feature?, userLocation: CLPlacemark?, networkManager: NetworkManager?, view: PlaceDetailsController?, router: RouterPlaceDetailsScreen?) {
         self.place = place
         self.userLocation = userLocation
         self.router = router
@@ -78,7 +78,7 @@ class PlaceDetailsPresenterImpl: PlaceDetailsPresenter {
 extension PlaceDetailsPresenterImpl: PlaceDetailsPresenterDelegate {
     
     func makeRoute() {
-        print("tapped")
+        router?.makeRoute(place: placeProperties)
     }
     
 }

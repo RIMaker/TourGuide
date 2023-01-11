@@ -20,7 +20,7 @@ class NetworkManagerImpl: NetworkManager {
     func fetchData<T>(_ type: T.Type, forURL requestUrl: URL?, complition: @escaping (Result<T?, Error>) -> ()) where T: Codable {
         guard let url = requestUrl else { return }
         let session = URLSession.shared
-        let request = URLRequest(url: url)
+        let request = URLRequest(url: url, cachePolicy: .returnCacheDataElseLoad)
         session.dataTask(with: request) { (data, response, error) in
             guard
                 let data = data,

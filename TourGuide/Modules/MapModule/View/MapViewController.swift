@@ -14,7 +14,7 @@ protocol MapViewController: AnyObject {
 
 class MapViewControllerImpl: UIViewController, MapViewController {
     
-    var presenter: MapVCPresenter?
+    var presenter: MapPresenter?
     
     lazy var mapView: MKMapView = {
         let map = MKMapView()

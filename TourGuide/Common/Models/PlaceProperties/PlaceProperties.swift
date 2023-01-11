@@ -23,4 +23,21 @@ struct PlaceProperties: Codable {
     let preview: Preview?
     let wikipediaExtracts: WikipediaExtracts?
     let point: Point?
+    
+    func getAddress(type: AddressType) -> String {
+        var addressArr: [String]
+        switch type {
+        case .full:
+            addressArr = [address?.city ?? "", address?.road ?? "", address?.houseNumber ?? ""]
+        case .short:
+            addressArr = [address?.road ?? "", address?.houseNumber ?? ""]
+        }
+        addressArr = addressArr.filter { $0 != "" }
+        return addressArr.joined(separator: ", ")
+    }
+}
+
+enum AddressType {
+    case full
+    case short
 }

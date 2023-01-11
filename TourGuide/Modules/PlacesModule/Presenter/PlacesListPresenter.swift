@@ -8,9 +8,9 @@
 import Foundation
 import MapKit
 
-protocol PlacesListVCPresenter {
+protocol PlacesListPresenter {
     var places: Places? { get }
-    init(networkManager: NetworkManager, cacheManager: CacheManager, view: PlacesListController?, router: Router?)
+    init(networkManager: NetworkManager, cacheManager: CacheManager, view: PlacesListController?, router: RouterPlacesListScreen?)
     func viewShown()
     func tapOnThePlace(place: Feature?)
     func updateData()
@@ -20,13 +20,13 @@ protocol PlacesListVCPresenter {
     func stopUpdatingLocation()
 }
 
-class PlacesListVCPresenterImpl: PlacesListVCPresenter {
+class PlacesListPresenterImpl: PlacesListPresenter {
     
     var places: Places?
     
     private var userLocation: CLPlacemark?
     
-    private var router: Router?
+    private var router: RouterPlacesListScreen?
     
     private let networkManager: NetworkManager
     
@@ -34,7 +34,7 @@ class PlacesListVCPresenterImpl: PlacesListVCPresenter {
     
     private let cacheManager: CacheManager
     
-    required init(networkManager: NetworkManager, cacheManager: CacheManager, view: PlacesListController?, router: Router?) {
+    required init(networkManager: NetworkManager, cacheManager: CacheManager, view: PlacesListController?, router: RouterPlacesListScreen?) {
         self.networkManager = networkManager
         self.cacheManager = cacheManager
         self.view = view

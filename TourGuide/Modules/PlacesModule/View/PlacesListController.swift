@@ -18,9 +18,9 @@ protocol PlacesListController: AnyObject {
 
 class PlacesListControllerImpl: UIViewController, PlacesListController {
     
-    var locationManager = CLLocationManager()
+    let locationManager = CLLocationManager()
     
-    var presenter: PlacesListVCPresenter?
+    var presenter: PlacesListPresenter?
     
     private var collectionView: UICollectionView?
     

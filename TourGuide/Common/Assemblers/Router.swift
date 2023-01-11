@@ -11,15 +11,28 @@ import MapKit
 protocol RouterBase {
     var navController: UINavigationController? { get set }
     var viewFactory: ViewFactory? { get set }
-}
-
-protocol Router: RouterBase {
-    func initialViewController()
-    func showDetail(place: Feature?, userLocation: CLPlacemark?)
     func popToRoot()
 }
 
-class RouterPlacesListImpl: Router {
+extension RouterBase {
+    func popToRoot() {
+        if let navController = navController {
+            navController.popToRootViewController(animated: true)
+        }
+    }
+}
+
+// MARK: RouterPlacesList
+protocol RouterPlacesListScreen: RouterBase {
+    func initialViewController()
+    func showDetail(place: Feature?, userLocation: CLPlacemark?)
+}
+
+protocol RouterPlaceDetailsScreen: RouterBase {
+    func makeRoute(place: PlaceProperties?)
+}
+
+class RouterPlacesListImpl: RouterPlacesListScreen, RouterPlaceDetailsScreen {
     
     var navController: UINavigationController?
     
@@ -44,16 +57,22 @@ class RouterPlacesListImpl: Router {
         }
     }
     
-    func popToRoot() {
+    func makeRoute(place: PlaceProperties?) {
         if let navController = navController {
-            navController.popToRootViewController(animated: true)
+            guard let placeDetailsVC = viewFactory?.makeRouteScreen(place: place) else { return }
+            navController.present(placeDetailsVC, animated: true)
         }
     }
     
 }
 
 
-class RouterMapImpl: Router {
+// MARK: RouterMap
+protocol RouterMap: RouterBase {
+    func initialViewController()
+}
+
+class RouterMapImpl: RouterMap {
     
     var navController: UINavigationController?
     
@@ -68,19 +87,6 @@ class RouterMapImpl: Router {
         if let navController = navController {
             guard let mapVC = viewFactory?.makeMapScreen(title: "Карта", image: .map, router: self) else { return }
             navController.viewControllers = [mapVC]
-        }
-    }
-    
-    func showDetail(place: Feature?, userLocation: CLPlacemark?) {
-//        if let navController = navController {
-//            guard let detailPlaceVC = viewFactory?.makeDetailPlaceScreen(place: place, router: self) else { return }
-//            navController.pushViewController(detailPlaceVC, animated: true)
-//        }
-    }
-    
-    func popToRoot() {
-        if let navController = navController {
-            navController.popToRootViewController(animated: true)
         }
     }
     
