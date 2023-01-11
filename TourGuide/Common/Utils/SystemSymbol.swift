@@ -13,4 +13,5 @@ enum SystemSymbol: String {
     case paperplane = "paperplane"
     case paperplaneCircle = "paperplane.circle.fill"
     case close = "x.circle"
+    case makeRoute = "chevron.right.circle.fill"
 }

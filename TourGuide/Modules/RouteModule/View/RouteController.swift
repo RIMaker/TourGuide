@@ -36,6 +36,7 @@ class RouteControllerImpl: UIViewController, RouteController {
     
     private lazy var mapView: MKMapView = {
         let map = MKMapView()
+        map.translatesAutoresizingMaskIntoConstraints = false
         return map
     }()
     
@@ -46,6 +47,17 @@ class RouteControllerImpl: UIViewController, RouteController {
         btn.layer.cornerRadius = 35
         btn.clipsToBounds = true
         btn.image = UIImage(systemName: SystemSymbol.paperplaneCircle.rawValue)
+        btn.backgroundColor = UIColor(named: "PaperplaneColor")
+        return btn
+    }()
+    
+    private lazy var makeRouteButton: UIImageView = {
+        let btn = UIImageView()
+        btn.translatesAutoresizingMaskIntoConstraints = false
+        btn.contentMode = .scaleAspectFill
+        btn.layer.cornerRadius = 50
+        btn.clipsToBounds = true
+        btn.image = UIImage(systemName: SystemSymbol.makeRoute.rawValue)
         btn.backgroundColor = UIColor(named: "PaperplaneColor")
         return btn
     }()
@@ -64,10 +76,9 @@ class RouteControllerImpl: UIViewController, RouteController {
         view.addSubview(mapView)
         view.addSubview(closeButton)
         view.addSubview(centerInUserLocationButton)
-        view.bringSubviewToFront(closeButton)
-        view.bringSubviewToFront(centerInUserLocationButton)
+        view.addSubview(makeRouteButton)
+        view.sendSubviewToBack(mapView)
         
-        mapView.translatesAutoresizingMaskIntoConstraints = false
         mapView.topAnchor.constraint(equalTo: view.topAnchor).isActive = true
         mapView.bottomAnchor.constraint(equalTo: view.bottomAnchor).isActive = true
         mapView.leftAnchor.constraint(equalTo: view.leftAnchor).isActive = true
@@ -88,6 +99,14 @@ class RouteControllerImpl: UIViewController, RouteController {
         let tapGestureRecognizerOfUserLocButton = UITapGestureRecognizer(target: self, action: #selector(setCenterToUserLocation(_:)))
         centerInUserLocationButton.isUserInteractionEnabled = true
         centerInUserLocationButton.addGestureRecognizer(tapGestureRecognizerOfUserLocButton)
+        
+        makeRouteButton.bottomAnchor.constraint(equalTo: view.bottomAnchor, constant: -150).isActive = true
+        makeRouteButton.centerXAnchor.constraint(equalTo: view.centerXAnchor).isActive = true
+        makeRouteButton.widthAnchor.constraint(equalToConstant: 100).isActive = true
+        makeRouteButton.heightAnchor.constraint(equalToConstant: 100).isActive = true
+        let tapGestureRecognizerOfMakeRouteButton = UITapGestureRecognizer(target: self, action: #selector(makeRoute(_:)))
+        makeRouteButton.isUserInteractionEnabled = true
+        makeRouteButton.addGestureRecognizer(tapGestureRecognizerOfMakeRouteButton)
     }
     
     func showAnnotation(annotation: MKPointAnnotation) {
@@ -124,6 +143,13 @@ class RouteControllerImpl: UIViewController, RouteController {
             DispatchQueue.main.async { [weak self] in
                 self?.mapView.setRegion(region, animated: true)
             }
+        }
+    }
+    
+    @objc
+    private func makeRoute(_ sender: UIButton) {
+        DispatchQueue.main.async { [weak self] in
+            self?.makeRouteButton.isHidden = true
         }
     }
 
