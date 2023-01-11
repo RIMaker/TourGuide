@@ -54,7 +54,7 @@ class PlaceDetailsPresenterImpl: PlaceDetailsPresenter {
     
     func distanceToUser(fromPlace place: MKMapItem) -> String? {
         if let userLocation = userLocation?.location, let placeLoc = place.placemark.location {
-            return "\(Int(userLocation.distance(from: placeLoc))) м."
+            return String(format: "%.2f", userLocation.distance(from: placeLoc) / 1000) + " км."
         } else {
             return nil
         }

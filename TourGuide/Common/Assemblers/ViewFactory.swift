@@ -58,6 +58,7 @@ class ViewFactoryImpl: ViewFactory {
         let placesVCPresenter: PlacesListPresenter = PlacesListPresenterImpl(
             networkManager: NetworkManagerImpl(),
             cacheManager: CacheManagerImpl(),
+            mapManager: MapManager(),
             view: placesVC,
             router: router)
         placesVC.presenter = placesVCPresenter
