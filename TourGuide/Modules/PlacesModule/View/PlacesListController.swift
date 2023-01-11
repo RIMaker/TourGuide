@@ -9,7 +9,6 @@ import UIKit
 import MapKit
 
 protocol PlacesListController: AnyObject {
-    var locationManager: CLLocationManager { get }
     func setupViews()
     func actIndStopAnimating()
     func actIndStartAnimating()
@@ -17,8 +16,6 @@ protocol PlacesListController: AnyObject {
 }
 
 class PlacesListControllerImpl: UIViewController, PlacesListController {
-    
-    let locationManager = CLLocationManager()
     
     var presenter: PlacesListPresenter?
     
@@ -63,8 +60,7 @@ class PlacesListControllerImpl: UIViewController, PlacesListController {
         refreshControl.addTarget(self, action: #selector(updateData(_:)), for: .valueChanged)
         collectionView?.refreshControl = refreshControl
         
-        locationManager.delegate = self
-        locationManager.desiredAccuracy = kCLLocationAccuracyBest
+        presenter?.mapManager?.locationManager.delegate = self
         
         view.addSubview(collectionView!)
         view.addSubview(activityIndicator)
@@ -119,7 +115,11 @@ extension PlacesListControllerImpl: UICollectionViewDelegate, UICollectionViewDa
         myCell.place = feature
         if let coordinates = feature?.geometry?.coordinates {
             let placeMark = MKPlacemark(coordinate: CLLocationCoordinate2D(latitude: coordinates[1], longitude: coordinates[0]))
-            myCell.distanceToUser = presenter?.distanceToUser(fromPlace: MKMapItem(placemark: placeMark))
+            presenter?.mapManager?.distanceToUser(
+                userLocation: presenter?.userLocation,
+                fromPlace: MKMapItem(placemark: placeMark)) { result in
+                    myCell.distanceToUser = result
+                }
         }
         return myCell
     }

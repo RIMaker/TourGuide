@@ -23,6 +23,7 @@ class PlaceImageCell: UITableViewCell {
     
     private var placeImage: UIImageView = {
         let imgView = UIImageView(image: UIImage(systemName: SystemSymbol.places.rawValue))
+        imgView.tintColor = .darkGray
         imgView.translatesAutoresizingMaskIntoConstraints = false
         imgView.contentMode = .scaleAspectFill
         imgView.clipsToBounds = true

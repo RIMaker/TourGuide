@@ -21,11 +21,11 @@ class PlaceCell: UICollectionViewCell {
         }
     }
     
-    var distanceToUser: Int? {
+    var distanceToUser: String? {
         didSet {
             if let distanceToUser = distanceToUser {
                 DispatchQueue.main.async { [weak self] in
-                    self?.distanceLabel.text = "\(distanceToUser.description) м."
+                    self?.distanceLabel.text = "\(distanceToUser) км."
                 }
             }
         }

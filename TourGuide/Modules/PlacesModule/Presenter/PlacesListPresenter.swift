@@ -10,21 +10,20 @@ import MapKit
 
 protocol PlacesListPresenter {
     var places: Places? { get }
-    init(networkManager: NetworkManager, cacheManager: CacheManager, view: PlacesListController?, router: RouterPlacesListScreen?)
+    var mapManager: MapManagerPlacesModule? { get }
+    var userLocation: CLPlacemark? { get }
+    init(networkManager: NetworkManager, cacheManager: CacheManager, mapManager: MapManagerPlacesModule, view: PlacesListController?, router: RouterPlacesListScreen?)
     func viewShown()
     func tapOnThePlace(place: Feature?)
     func updateData()
-    func startUpdatingLocation()
     func searchCompleted(placemark: CLPlacemark)
-    func distanceToUser(fromPlace place: MKMapItem) -> Int
-    func stopUpdatingLocation()
 }
 
 class PlacesListPresenterImpl: PlacesListPresenter {
     
     var places: Places?
-    
-    private var userLocation: CLPlacemark?
+    var mapManager: MapManagerPlacesModule?
+    var userLocation: CLPlacemark?
     
     private var router: RouterPlacesListScreen?
     
@@ -34,18 +33,19 @@ class PlacesListPresenterImpl: PlacesListPresenter {
     
     private let cacheManager: CacheManager
     
-    required init(networkManager: NetworkManager, cacheManager: CacheManager, view: PlacesListController?, router: RouterPlacesListScreen?) {
+    required init(networkManager: NetworkManager, cacheManager: CacheManager, mapManager: MapManagerPlacesModule, view: PlacesListController?, router: RouterPlacesListScreen?) {
         self.networkManager = networkManager
         self.cacheManager = cacheManager
         self.view = view
         self.router = router
+        self.mapManager = mapManager
     }
     
     private func fetchData() {
         DispatchQueue.main.async { [weak self] in
             self?.view?.actIndStartAnimating()
         }
-        if shouldUpdateData() {
+        if cacheManager.shouldUpdateData() {
             let url = APIProvider.shared.placesURL()
             networkManager.fetchData(Places.self, forURL: url) { [weak self] result in
                 guard let self = self else { return }
@@ -72,36 +72,10 @@ class PlacesListPresenterImpl: PlacesListPresenter {
         }
     }
     
-    private func shouldUpdateData() -> Bool {
-        let lastUpdatingDate = UserDefaults.standard.object(forKey: UserDefaultsKeys.lastUpdatingDateKey.rawValue) as? Date
-        let cachedData = cacheManager.cachedData()
-        let nowDate = Date()
-        if let lastUpdatingDate = lastUpdatingDate, let _ = cachedData {
-            if nowDate.timeIntervalSince(lastUpdatingDate) >= 3600 {
-                return true
-            }
-            return false
-        }
-        return true
-    }
-    
-    private func getLocation() {
-        if CLLocationManager.authorizationStatus() == .authorizedWhenInUse {
-            view?.locationManager.requestLocation()
-        }
-    }
-    
-    private func requestLocation() {
-        if CLLocationManager.authorizationStatus() == .notDetermined {
-            view?.locationManager.requestWhenInUseAuthorization()
-        }
-        startUpdatingLocation()
-    }
-    
     func viewShown() {
         view?.setupViews()
         fetchData()
-        requestLocation()
+        mapManager?.requestLocation()
     }
     
     func tapOnThePlace(place: Feature?) {
@@ -110,38 +84,14 @@ class PlacesListPresenterImpl: PlacesListPresenter {
     
     func updateData() {
         fetchData()
-        requestLocation()
-    }
-    
-    func distanceToUser(fromPlace place: MKMapItem) -> Int {
-        if let userLocation = userLocation?.location, let placeLoc = place.placemark.location {
-            return Int(userLocation.distance(from: placeLoc))
-        } else {
-            return 0
-        }
+        mapManager?.requestLocation()
     }
     
     func searchCompleted(placemark: CLPlacemark) {
         userLocation = placemark
-        stopUpdatingLocation()
+        mapManager?.locationManager.stopUpdatingLocation()
         DispatchQueue.main.async { [weak self] in
             self?.view?.reloadData()
-        }
-    }
-    
-    func startUpdatingLocation() {
-        DispatchQueue.global().async { [weak self] in
-            if CLLocationManager.locationServicesEnabled() {
-                self?.view?.locationManager.startUpdatingLocation()
-            }
-        }
-    }
-    
-    func stopUpdatingLocation() {
-        DispatchQueue.global().async { [weak self] in
-            if CLLocationManager.locationServicesEnabled() {
-                self?.view?.locationManager.stopUpdatingLocation()
-            }
         }
     }
     

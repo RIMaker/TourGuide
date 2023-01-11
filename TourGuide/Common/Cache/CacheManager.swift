@@ -10,6 +10,7 @@ import Foundation
 protocol CacheManager {
     func cachedData() -> Places?
     func cache(data: Places?)
+    func shouldUpdateData() -> Bool
 }
 
 class CacheManagerImpl: CacheManager {
@@ -30,5 +31,18 @@ class CacheManagerImpl: CacheManager {
             UserDefaults.standard.set(encoded, forKey: UserDefaultsKeys.cachedObjectKey.rawValue)
             UserDefaults.standard.set(Date(), forKey: UserDefaultsKeys.lastUpdatingDateKey.rawValue)
         }
+    }
+    
+    func shouldUpdateData() -> Bool {
+        let lastUpdatingDate = UserDefaults.standard.object(forKey: UserDefaultsKeys.lastUpdatingDateKey.rawValue) as? Date
+        let cachedData = cachedData()
+        let nowDate = Date()
+        if let lastUpdatingDate = lastUpdatingDate, let _ = cachedData {
+            if nowDate.timeIntervalSince(lastUpdatingDate) >= 3600 {
+                return true
+            }
+            return false
+        }
+        return true
     }
 }
