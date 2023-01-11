@@ -73,11 +73,7 @@ extension PlaceDetailsControllerImpl: UITableViewDelegate, UITableViewDataSource
             return cell
         } else if indexPath.row == 2 {
             let cell = tableView.dequeueReusableCell(withIdentifier: InfoCell.cellId, for: indexPath) as! InfoCell
-            if let address = presenter?.placeProperties?.address {
-                var addressArr = [address.city ?? "", address.road ?? "", address.houseNumber ?? ""]
-                addressArr = addressArr.filter { $0 != "" }
-                cell.info = ("АДРЕС", addressArr.joined(separator: ", "))
-            }
+            cell.info = ("АДРЕС", presenter?.placeProperties?.getAddress(type: .full))
             cell.selectionStyle = .none
             return cell
         } else if indexPath.row == 3 {

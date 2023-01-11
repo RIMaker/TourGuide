@@ -38,6 +38,17 @@ class RouteControllerImpl: UIViewController, RouteController {
         let map = MKMapView()
         return map
     }()
+    
+    private lazy var centerInUserLocationButton: UIImageView = {
+        let btn = UIImageView()
+        btn.translatesAutoresizingMaskIntoConstraints = false
+        btn.contentMode = .scaleAspectFill
+        btn.layer.cornerRadius = 35
+        btn.clipsToBounds = true
+        btn.image = UIImage(systemName: SystemSymbol.paperplaneCircle.rawValue)
+        btn.backgroundColor = UIColor(named: "PaperplaneColor")
+        return btn
+    }()
 
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -52,7 +63,9 @@ class RouteControllerImpl: UIViewController, RouteController {
         
         view.addSubview(mapView)
         view.addSubview(closeButton)
+        view.addSubview(centerInUserLocationButton)
         view.bringSubviewToFront(closeButton)
+        view.bringSubviewToFront(centerInUserLocationButton)
         
         mapView.translatesAutoresizingMaskIntoConstraints = false
         mapView.topAnchor.constraint(equalTo: view.topAnchor).isActive = true
@@ -64,9 +77,17 @@ class RouteControllerImpl: UIViewController, RouteController {
         closeButton.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: -20).isActive = true
         closeButton.widthAnchor.constraint(equalToConstant: 50).isActive = true
         closeButton.heightAnchor.constraint(equalToConstant: 50).isActive = true
-        let tapGestureRecognizer = UITapGestureRecognizer(target: self, action: #selector(close(_:)))
+        let tapGestureRecognizerOfCloseButton = UITapGestureRecognizer(target: self, action: #selector(close(_:)))
         closeButton.isUserInteractionEnabled = true
-        closeButton.addGestureRecognizer(tapGestureRecognizer)
+        closeButton.addGestureRecognizer(tapGestureRecognizerOfCloseButton)
+        
+        centerInUserLocationButton.bottomAnchor.constraint(equalTo: view.bottomAnchor, constant: -50).isActive = true
+        centerInUserLocationButton.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: -20).isActive = true
+        centerInUserLocationButton.widthAnchor.constraint(equalToConstant: 70).isActive = true
+        centerInUserLocationButton.heightAnchor.constraint(equalToConstant: 70).isActive = true
+        let tapGestureRecognizerOfUserLocButton = UITapGestureRecognizer(target: self, action: #selector(setCenterToUserLocation(_:)))
+        centerInUserLocationButton.isUserInteractionEnabled = true
+        centerInUserLocationButton.addGestureRecognizer(tapGestureRecognizerOfUserLocButton)
     }
     
     func showAnnotation(annotation: MKPointAnnotation) {
@@ -90,6 +111,20 @@ class RouteControllerImpl: UIViewController, RouteController {
     @objc
     private func close(_ sender: UIButton) {
         dismiss(animated: true)
+    }
+    
+    @objc
+    private func setCenterToUserLocation(_ sender: UIButton) {
+        if let location = locationManager.location?.coordinate {
+            let region = MKCoordinateRegion(
+                center: location,
+                latitudinalMeters: 8000,
+                longitudinalMeters: 8000
+            )
+            DispatchQueue.main.async { [weak self] in
+                self?.mapView.setRegion(region, animated: true)
+            }
+        }
     }
 
 }

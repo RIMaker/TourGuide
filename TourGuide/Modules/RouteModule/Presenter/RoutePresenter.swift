@@ -35,20 +35,18 @@ class RoutePresenterImpl: RoutePresenter {
     
     func checkLocationAuthorization() {
         DispatchQueue.main.async { [weak self] in
-            if CLLocationManager.locationServicesEnabled() {
-                switch CLLocationManager.authorizationStatus() {
-                case .notDetermined:
-                    self?.view?.locationManager.requestWhenInUseAuthorization()
-                case .authorizedWhenInUse, .authorizedAlways:
-                    self?.view?.showUserLocation()
-                default: break
-                }
-            } else {
+            switch CLLocationManager.authorizationStatus() {
+            case .notDetermined:
+                self?.view?.locationManager.requestWhenInUseAuthorization()
+            case .authorizedWhenInUse, .authorizedAlways:
+                self?.view?.showUserLocation()
+            case .denied:
                 DispatchQueue.main.asyncAfter(deadline: .now() + 1) {
                     self?.view?.showAlert(
                         title: "Ваше местоположение недоступно",
                         message: "Перейдите в Настройки -> TourGuide -> Геопозиция")
                 }
+            default: break
             }
         }
     }
@@ -63,6 +61,7 @@ class RoutePresenterImpl: RoutePresenter {
         let coordinate = CLLocationCoordinate2D(latitude: lat, longitude: lon)
         annotation.coordinate = coordinate
         annotation.title = place?.name
+        annotation.subtitle = place?.getAddress(type: .short)
         view?.showAnnotation(annotation: annotation)
     }
 }
