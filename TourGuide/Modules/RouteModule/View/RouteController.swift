@@ -12,7 +12,10 @@ protocol RouteController: AnyObject {
     var locationManager: CLLocationManager { get }
     func setupViews()
     func showAnnotation(annotation: MKPointAnnotation)
-    func showUserLocation()
+    func showUserLocationTrue()
+    func resetMapView(withDirections directions: MKDirections)
+    func getCenterLocation() -> CLLocation
+    func setRegion(region: MKCoordinateRegion)
     func addDirectionInMap(route: MKRoute)
     func showAlert(title: String, message: String)
 }
@@ -117,8 +120,28 @@ class RouteControllerImpl: UIViewController, RouteController {
         }
     }
     
-    func showUserLocation() {
+    func resetMapView(withDirections directions: MKDirections) {
+        mapView.removeOverlays(mapView.overlays)
+        presenter?.directionsArray.append(directions)
+        let _ = presenter?.directionsArray.map { $0.cancel() }
+        presenter?.directionsArray.removeAll()
+    }
+    
+    func getCenterLocation() -> CLLocation {
+        let latitude = mapView.centerCoordinate.latitude
+        let longitude = mapView.centerCoordinate.longitude
+        
+        return CLLocation(latitude: latitude, longitude: longitude)
+    }
+    
+    func showUserLocationTrue() {
         mapView.showsUserLocation = true
+    }
+    
+    func setRegion(region: MKCoordinateRegion) {
+        DispatchQueue.main.async { [weak self] in
+            self?.mapView.setRegion(region, animated: true)
+        }
     }
     
     func addDirectionInMap(route: MKRoute) {
@@ -145,16 +168,7 @@ class RouteControllerImpl: UIViewController, RouteController {
     
     @objc
     private func setCenterToUserLocation(_ sender: UIButton) {
-        if let location = locationManager.location?.coordinate {
-            let region = MKCoordinateRegion(
-                center: location,
-                latitudinalMeters: 8000,
-                longitudinalMeters: 8000
-            )
-            DispatchQueue.main.async { [weak self] in
-                self?.mapView.setRegion(region, animated: true)
-            }
-        }
+        presenter?.showUserLocation()
     }
     
     @objc
@@ -186,6 +200,17 @@ extension RouteControllerImpl: MKMapViewDelegate {
         }
         
         return annotationView
+    }
+    
+    func mapView(_ mapView: MKMapView, regionDidChangeAnimated animated: Bool) {
+
+        let geocoder = CLGeocoder()
+        if presenter?.previousLocation != nil {
+            DispatchQueue.main.asyncAfter(deadline: .now() + 3) { [weak self] in
+                self?.presenter?.showUserLocation()
+            }
+        }
+        geocoder.cancelGeocode()
     }
     
     func mapView(_ mapView: MKMapView, rendererFor overlay: MKOverlay) -> MKOverlayRenderer {
