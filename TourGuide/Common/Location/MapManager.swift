@@ -194,8 +194,13 @@ extension MapManager: MapManagerRouteModule {
                 self?.mapView?.setVisibleMapRect(route.polyline.boundingMapRect, animated: true)
                 
                 let distance = String(format: "%.2f", route.distance / 1000)
-                let timeInterval = String(format: "%.2f", route.expectedTravelTime / 3600)
-                completion("\(timeInterval) ч. \(distance) км.")
+                let timeIntervalH = String(format: "%d", Int(route.expectedTravelTime) / 3600)
+                let timeIntervalM = String(format: "%d", Int(route.expectedTravelTime) % 3600 / 60)
+                if timeIntervalH != "0" {
+                    completion("\(timeIntervalH)ч. \(timeIntervalM)мин.   \(distance)км.")
+                } else {
+                    completion("\(timeIntervalM)мин.   \(distance)км.")
+                }
             } else {
                 completion(nil)
             }
