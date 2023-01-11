@@ -127,13 +127,13 @@ extension MapManager: MapManagerRouteModule {
     }
     
     func checkLocationAuthorization(completion: (() -> ())?) {
+        completion?()
         switch CLLocationManager.authorizationStatus() {
         case .notDetermined:
             locationManager.requestWhenInUseAuthorization()
         case .authorizedWhenInUse, .authorizedAlways:
             mapView?.showsUserLocation = true
             locationManager.desiredAccuracy = kCLLocationAccuracyBest
-            completion?()
         case .denied:
             DispatchQueue.main.asyncAfter(deadline: .now() + 1) { [weak self] in
                 self?.showAlert(
