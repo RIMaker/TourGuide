@@ -23,18 +23,6 @@ class MapManager {
     private var placeCoordinate: CLLocationCoordinate2D?
     private var mapView: MKMapView?
     
-    private func showAlert(title: String, message: String) {
-        let alert = UIAlertController(title: title, message: message, preferredStyle: .alert)
-        let action = UIAlertAction(title: "OK", style: .default)
-        alert.addAction(action)
-        
-        let alertWindow = UIWindow(frame: UIScreen.main.bounds)
-        alertWindow.rootViewController = UIViewController()
-        alertWindow.windowLevel = UIWindow.Level.alert + 1
-        alertWindow.makeKeyAndVisible()
-        alertWindow.rootViewController?.present(alert, animated: true)
-    }
-    
     func setupPlacemark(place: PlaceProperties?, mapView: MKMapView) {
         self.mapView = mapView
         guard
@@ -53,37 +41,23 @@ class MapManager {
         }
     }
     
-    func checkLocationServices(closure: () -> ()) {
-        
-        if CLLocationManager.locationServicesEnabled() {
+    func checkLocationAuthorization(completion: (() -> ())?) {
+        switch CLLocationManager.authorizationStatus() {
+        case .notDetermined:
+            locationManager.requestWhenInUseAuthorization()
+        case .authorizedWhenInUse, .authorizedAlways:
+            mapView?.showsUserLocation = true
             locationManager.desiredAccuracy = kCLLocationAccuracyBest
-            checkLocationAuthorization()
-            closure()
-        } else {
+            completion?()
+        case .denied:
             DispatchQueue.main.asyncAfter(deadline: .now() + 1) { [weak self] in
                 self?.showAlert(
                     title: "Ваше местоположение недоступно",
                     message: "Перейдите в Настройки -> TourGuide -> Геопозиция")
             }
+        default: break
         }
-    }
-    
-    func checkLocationAuthorization() {
-        DispatchQueue.main.async { [weak self] in
-            switch CLLocationManager.authorizationStatus() {
-            case .notDetermined:
-                self?.locationManager.requestWhenInUseAuthorization()
-            case .authorizedWhenInUse, .authorizedAlways:
-                self?.mapView?.showsUserLocation = true
-            case .denied:
-                DispatchQueue.main.asyncAfter(deadline: .now() + 1) {
-                    self?.showAlert(
-                        title: "Ваше местоположение недоступно",
-                        message: "Перейдите в Настройки -> TourGuide -> Геопозиция")
-                }
-            default: break
-            }
-        }
+        
     }
     
     func showUserLocation() {
@@ -137,6 +111,20 @@ class MapManager {
             }
             
         }
+    }
+    
+    private func showAlert(title: String, message: String) {
+        print(title)
+        print(message)
+//        let alert = UIAlertController(title: title, message: message, preferredStyle: .alert)
+//        let action = UIAlertAction(title: "OK", style: .default)
+//        alert.addAction(action)
+//
+//        let alertWindow = UIWindow(frame: UIScreen.main.bounds)
+//        alertWindow.rootViewController = UIViewController()
+//        alertWindow.windowLevel = UIWindow.Level.alert + 1
+//        alertWindow.makeKeyAndVisible()
+//        alertWindow.rootViewController?.present(alert, animated: true)
     }
     
     private func startTrackingUserLocation() {

@@ -58,14 +58,14 @@ class RouteControllerImpl: UIViewController, RouteController {
 
     override func viewDidLoad() {
         super.viewDidLoad()
-
+        definesPresentationContext = true
         presenter?.viewShown(mapView: mapView)
     }
     
     func setupViews() {
         mapView.delegate = self
-        presenter?.mapManager?.checkLocationServices {
-            presenter?.mapManager?.locationManager.delegate = self
+        presenter?.mapManager?.checkLocationAuthorization {
+            self.presenter?.mapManager?.locationManager.delegate = self
         }
         
         view.addSubview(mapView)
@@ -154,6 +154,6 @@ extension RouteControllerImpl: MKMapViewDelegate {
 
 extension RouteControllerImpl: CLLocationManagerDelegate {
     func locationManagerDidChangeAuthorization(_ manager: CLLocationManager) {
-        presenter?.mapManager?.checkLocationAuthorization()
+        presenter?.mapManager?.checkLocationAuthorization(completion: nil)
     }
 }

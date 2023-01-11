@@ -22,6 +22,7 @@ class ViewFactoryImpl: ViewFactory {
     func makeMainScreen() -> UIViewController {
         let mainVC = UITabBarController()
         mainVC.tabBar.tintColor = .label
+        mainVC.definesPresentationContext = true
         let placesNavController = UINavigationController()
         let mapNavController = UINavigationController()
         let placesListRouter: RouterPlacesListScreen = RouterPlacesListImpl(navController: placesNavController, viewFactory: self)
