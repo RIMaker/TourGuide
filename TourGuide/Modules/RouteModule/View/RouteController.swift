@@ -45,15 +45,46 @@ class RouteControllerImpl: UIViewController, RouteController {
         return btn
     }()
     
-    private lazy var makeRouteButton: UIImageView = {
+    private lazy var goOnFoot: UIImageView = {
         let btn = UIImageView()
         btn.translatesAutoresizingMaskIntoConstraints = false
         btn.contentMode = .scaleAspectFill
         btn.layer.cornerRadius = 50
         btn.clipsToBounds = true
-        btn.image = UIImage(systemName: SystemSymbol.makeRoute.rawValue)
-        btn.backgroundColor = UIColor(named: "PaperplaneColor")
+        btn.image = UIImage(systemName: SystemSymbol.makeRouteByFoot.rawValue)
         return btn
+    }()
+    
+    private lazy var goByCar: UIImageView = {
+        let btn = UIImageView()
+        btn.translatesAutoresizingMaskIntoConstraints = false
+        btn.contentMode = .scaleAspectFill
+        btn.layer.cornerRadius = 50
+        btn.clipsToBounds = true
+        btn.image = UIImage(systemName: SystemSymbol.makeRouteByCar.rawValue)
+        return btn
+    }()
+    
+    private lazy var makeRouteStackView: UIStackView = {
+        let hStack = UIStackView()
+        hStack.translatesAutoresizingMaskIntoConstraints = false
+        hStack.spacing = 15
+        hStack.layer.cornerRadius = 50
+        hStack.clipsToBounds = true
+        hStack.distribution = .fillEqually
+        hStack.alignment = .center
+        hStack.axis = .horizontal
+        hStack.backgroundColor = UIColor(named: "PaperplaneColor")
+        return hStack
+    }()
+    
+    private lazy var infoLabel: UILabel = {
+        let lbl = UILabel()
+        lbl.isHidden = true
+        lbl.translatesAutoresizingMaskIntoConstraints = false
+        lbl.font = UIFont(name: "AppleSDGothicNeo-SemiBold", size: 30)
+        lbl.textAlignment = .center
+        return lbl
     }()
 
     override func viewDidLoad() {
@@ -71,8 +102,11 @@ class RouteControllerImpl: UIViewController, RouteController {
         view.addSubview(mapView)
         view.addSubview(closeButton)
         view.addSubview(centerInUserLocationButton)
-        view.addSubview(makeRouteButton)
+        view.addSubview(makeRouteStackView)
+        view.addSubview(infoLabel)
         view.sendSubviewToBack(mapView)
+        makeRouteStackView.addArrangedSubview(goByCar)
+        makeRouteStackView.addArrangedSubview(goOnFoot)
         
         mapView.topAnchor.constraint(equalTo: view.topAnchor).isActive = true
         mapView.bottomAnchor.constraint(equalTo: view.bottomAnchor).isActive = true
@@ -95,13 +129,27 @@ class RouteControllerImpl: UIViewController, RouteController {
         centerInUserLocationButton.isUserInteractionEnabled = true
         centerInUserLocationButton.addGestureRecognizer(tapGestureRecognizerOfUserLocButton)
         
-        makeRouteButton.bottomAnchor.constraint(equalTo: view.bottomAnchor, constant: -150).isActive = true
-        makeRouteButton.centerXAnchor.constraint(equalTo: view.centerXAnchor).isActive = true
-        makeRouteButton.widthAnchor.constraint(equalToConstant: 100).isActive = true
-        makeRouteButton.heightAnchor.constraint(equalToConstant: 100).isActive = true
-        let tapGestureRecognizerOfMakeRouteButton = UITapGestureRecognizer(target: self, action: #selector(makeRoute(_:)))
-        makeRouteButton.isUserInteractionEnabled = true
-        makeRouteButton.addGestureRecognizer(tapGestureRecognizerOfMakeRouteButton)
+        infoLabel.topAnchor.constraint(equalTo: view.topAnchor, constant: 100).isActive = true
+        infoLabel.centerXAnchor.constraint(equalTo: view.centerXAnchor).isActive = true
+        
+        makeRouteStackView.bottomAnchor.constraint(equalTo: view.bottomAnchor, constant: -150).isActive = true
+        makeRouteStackView.centerXAnchor.constraint(equalTo: view.centerXAnchor).isActive = true
+        
+        goByCar.widthAnchor.constraint(equalToConstant: 100).isActive = true
+        goByCar.heightAnchor.constraint(equalToConstant: 100).isActive = true
+        let tapGestureRecognizerOfGoByCarButton = UITapGestureRecognizer(
+            target: self,
+            action: #selector(makeRouteByCar(_:)))
+        goByCar.isUserInteractionEnabled = true
+        goByCar.addGestureRecognizer(tapGestureRecognizerOfGoByCarButton)
+        
+        goOnFoot.widthAnchor.constraint(equalToConstant: 100).isActive = true
+        goOnFoot.heightAnchor.constraint(equalToConstant: 100).isActive = true
+        let tapGestureRecognizerOfGoOnFootButton = UITapGestureRecognizer(
+            target: self,
+            action: #selector(makeRouteOnFoot(_:)))
+        goOnFoot.isUserInteractionEnabled = true
+        goOnFoot.addGestureRecognizer(tapGestureRecognizerOfGoOnFootButton)
     }
     
     @objc
@@ -115,11 +163,29 @@ class RouteControllerImpl: UIViewController, RouteController {
     }
     
     @objc
-    private func makeRoute(_ sender: UIButton) {
+    private func makeRouteByCar(_ sender: UIButton) {
         DispatchQueue.main.async { [weak self] in
-            self?.makeRouteButton.isHidden = true
+            self?.makeRouteStackView.isHidden = true
         }
-        presenter?.mapManager?.getDirections(place: presenter?.place)
+        presenter?.mapManager?.getDirections(place: presenter?.place, by: .automobile) { [weak self] info in
+            DispatchQueue.main.async {
+                self?.infoLabel.text = info
+                self?.infoLabel.isHidden = false
+            }
+        }
+    }
+    
+    @objc
+    private func makeRouteOnFoot(_ sender: UIButton) {
+        DispatchQueue.main.async { [weak self] in
+            self?.makeRouteStackView.isHidden = true
+        }
+        presenter?.mapManager?.getDirections(place: presenter?.place, by: .walking) { [weak self] info in
+            DispatchQueue.main.async {
+                self?.infoLabel.text = info
+                self?.infoLabel.isHidden = false
+            }
+        }
     }
 
 }

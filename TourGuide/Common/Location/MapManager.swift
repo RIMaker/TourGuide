@@ -73,17 +73,19 @@ class MapManager {
         }
     }
     
-    func getDirections(place: PlaceProperties?) {
+    func getDirections(place: PlaceProperties?, by transportType: MKDirectionsTransportType, completion: @escaping (String?)->()) {
         guard let location = locationManager.location?.coordinate else {
             showAlert(title: "Ошибка", message: "Текущее местопложение не обнаружено")
+            completion(nil)
             return
         }
         
         locationManager.startUpdatingLocation()
         previousLocation = CLLocation(latitude: location.latitude, longitude: location.longitude)
         
-        guard let request = createDirectionsRequest(place: place, from: location) else {
+        guard let request = createDirectionsRequest(place: place, from: location, by: transportType) else {
             showAlert(title: "Ошибка", message: "Место назначения не найдено")
+            completion(nil)
             return
         }
         
@@ -93,10 +95,12 @@ class MapManager {
         directions.calculate { [weak self] (response, error) in
             if let error = error {
                 print(error)
+                completion(nil)
                 return
             }
             guard let response = response else {
                 self?.showAlert(title: "Ошибка", message: "Маршрут не доступен")
+                completion(nil)
                 return
             }
             let routes = response.routes.sorted { $0.expectedTravelTime < $1.expectedTravelTime }
@@ -104,10 +108,11 @@ class MapManager {
                 self?.mapView?.addOverlay(route.polyline)
                 self?.mapView?.setVisibleMapRect(route.polyline.boundingMapRect, animated: true)
                 
-                let distance = String(format: "%.1f", route.distance / 1000)
-                let timeInterval = route.expectedTravelTime
-                print("Расстояние \(distance)")
-                print("time \(timeInterval)")
+                let distance = String(format: "%.2f", route.distance / 1000)
+                let timeInterval = String(format: "%.2f", route.expectedTravelTime / 3600)
+                completion("\(timeInterval) ч. \(distance) км.")
+            } else {
+                completion(nil)
             }
             
         }
@@ -148,7 +153,7 @@ class MapManager {
         return CLLocation(latitude: latitude, longitude: longitude)
     }
     
-    private func createDirectionsRequest(place: PlaceProperties?, from coordinate: CLLocationCoordinate2D) -> MKDirections.Request? {
+    private func createDirectionsRequest(place: PlaceProperties?, from coordinate: CLLocationCoordinate2D, by transportType: MKDirectionsTransportType) -> MKDirections.Request? {
         guard
             let lat = place?.point?.lat,
             let lon = place?.point?.lon
@@ -161,7 +166,7 @@ class MapManager {
         let request = MKDirections.Request()
         request.source = MKMapItem(placemark: startingLocation)
         request.destination = MKMapItem(placemark: destinationLocation)
-        request.transportType = .automobile
+        request.transportType = transportType
         request.requestsAlternateRoutes = true
         
         return request
