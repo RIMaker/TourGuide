@@ -42,17 +42,6 @@ class MapManager {
     private var placeCoordinate: CLLocationCoordinate2D?
     private var mapView: MKMapView?
     
-    func distanceToUser(userLocation: CLPlacemark?, fromPlace place: MKMapItem, completion: @escaping (String?)->()) {
-        let queue = DispatchQueue(label: "distanceToUser", qos: .userInitiated)
-        queue.async {
-            if let userLocation = userLocation?.location, let placeLoc = place.placemark.location {
-                completion(String(format: "%.2f", userLocation.distance(from: placeLoc) / 1000))
-            } else {
-                completion(nil)
-            }
-        }
-    }
-    
     private func showAlert(title: String, message: String) {
         print(title)
         print(message)
@@ -232,6 +221,17 @@ extension MapManager: MapManagerPlacesModule {
         DispatchQueue.global().async { [weak self] in
             if CLLocationManager.locationServicesEnabled() {
                 self?.locationManager.startUpdatingLocation()
+            }
+        }
+    }
+    
+    func distanceToUser(userLocation: CLPlacemark?, fromPlace place: MKMapItem, completion: @escaping (String?)->()) {
+        let queue = DispatchQueue(label: "distanceToUser", qos: .userInitiated)
+        queue.async {
+            if let userLocation = userLocation?.location, let placeLoc = place.placemark.location {
+                completion(String(format: "%.2f", userLocation.distance(from: placeLoc) / 1000))
+            } else {
+                completion(nil)
             }
         }
     }
