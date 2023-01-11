@@ -13,6 +13,7 @@ protocol RouteController: AnyObject {
     func setupViews()
     func showAnnotation(annotation: MKPointAnnotation)
     func showUserLocation()
+    func addDirectionInMap(route: MKRoute)
     func showAlert(title: String, message: String)
 }
 
@@ -120,6 +121,16 @@ class RouteControllerImpl: UIViewController, RouteController {
         mapView.showsUserLocation = true
     }
     
+    func addDirectionInMap(route: MKRoute) {
+        mapView.addOverlay(route.polyline)
+        mapView.setVisibleMapRect(route.polyline.boundingMapRect, animated: true)
+        
+        let distance = String(format: "%.1f", route.distance / 1000)
+        let timeInterval = route.expectedTravelTime
+        print("Расстояние \(distance)")
+        print("time \(timeInterval)")
+    }
+    
     func showAlert(title: String, message: String) {
         let alert = UIAlertController(title: title, message: message, preferredStyle: .alert)
         let action = UIAlertAction(title: "OK", style: .default)
@@ -151,6 +162,7 @@ class RouteControllerImpl: UIViewController, RouteController {
         DispatchQueue.main.async { [weak self] in
             self?.makeRouteButton.isHidden = true
         }
+        presenter?.getDirections()
     }
 
 }
@@ -174,6 +186,12 @@ extension RouteControllerImpl: MKMapViewDelegate {
         }
         
         return annotationView
+    }
+    
+    func mapView(_ mapView: MKMapView, rendererFor overlay: MKOverlay) -> MKOverlayRenderer {
+        let renderer = MKPolylineRenderer(overlay: overlay as! MKPolyline)
+        renderer.strokeColor = .blue
+        return renderer
     }
 }
 

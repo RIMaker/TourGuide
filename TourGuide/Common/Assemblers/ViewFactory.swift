@@ -20,7 +20,8 @@ protocol ViewFactory {
 class ViewFactoryImpl: ViewFactory {
     
     func makeMainScreen() -> UIViewController {
-        let mainVC = MainViewControllerImpl()
+        let mainVC = UITabBarController()
+        mainVC.tabBar.tintColor = .label
         let placesNavController = UINavigationController()
         let mapNavController = UINavigationController()
         let placesListRouter: RouterPlacesListScreen = RouterPlacesListImpl(navController: placesNavController, viewFactory: self)

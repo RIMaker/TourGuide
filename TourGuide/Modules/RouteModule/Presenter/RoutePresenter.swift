@@ -14,6 +14,7 @@ protocol RoutePresenter {
     init(place: PlaceProperties?, view: RouteController?)
     func viewShown()
     func checkLocationAuthorization()
+    func getDirections()
 }
 
 class RoutePresenterImpl: RoutePresenter {
@@ -49,6 +50,55 @@ class RoutePresenterImpl: RoutePresenter {
             default: break
             }
         }
+    }
+    
+    func getDirections() {
+        guard let location = view?.locationManager.location?.coordinate else {
+            view?.showAlert(title: "Ошибка", message: "Текущее местопложение не обнаружено")
+            return
+        }
+        
+        guard let request = createDirectionRequest(from: location) else {
+            view?.showAlert(title: "Ошибка", message: "Место назначения не найдено")
+            return
+        }
+        
+        let directions = MKDirections(request: request)
+        
+        directions.calculate { [weak self] (response, error) in
+            if let error = error {
+                print(error)
+                return
+            }
+            guard let response = response else {
+                self?.view?.showAlert(title: "Ошибка", message: "Маршрут не доступен")
+                return
+            }
+            let routes = response.routes.sorted { $0.expectedTravelTime < $1.expectedTravelTime }
+            if let route = routes.first {
+                self?.view?.addDirectionInMap(route: route)
+            }
+            
+        }
+    }
+    
+    private func createDirectionRequest(from coordinate: CLLocationCoordinate2D) -> MKDirections.Request? {
+        guard
+            let lat = place?.point?.lat,
+            let lon = place?.point?.lon
+        else { return nil }
+        
+        let destinationCoordinate = CLLocationCoordinate2D(latitude: lat, longitude: lon)
+        let startingLocation = MKPlacemark(coordinate: coordinate)
+        let destinationLocation = MKPlacemark(coordinate: destinationCoordinate)
+        
+        let request = MKDirections.Request()
+        request.source = MKMapItem(placemark: startingLocation)
+        request.destination = MKMapItem(placemark: destinationLocation)
+        request.transportType = .automobile
+        request.requestsAlternateRoutes = true
+        
+        return request
     }
     
     private func setupPlacemark() {

@@ -36,7 +36,6 @@
 		7CF1BCF32910252200DDFA22 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 7CF1BCF22910252200DDFA22 /* Assets.xcassets */; };
 		7CF1BCF62910252200DDFA22 /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 7CF1BCF42910252200DDFA22 /* LaunchScreen.storyboard */; };
 		7CF1BCFE2910295800DDFA22 /* MapViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7CF1BCFD2910295800DDFA22 /* MapViewController.swift */; };
-		7CF1BD0E2910475900DDFA22 /* MainViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7CF1BD0D2910475900DDFA22 /* MainViewController.swift */; };
 		7CF1BD1029105F3000DDFA22 /* ViewFactory.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7CF1BD0F29105F3000DDFA22 /* ViewFactory.swift */; };
 		7CF1BD12291061CF00DDFA22 /* SystemSymbol.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7CF1BD11291061CF00DDFA22 /* SystemSymbol.swift */; };
 		7CF1BD14291068DD00DDFA22 /* MapPresenter.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7CF1BD13291068DD00DDFA22 /* MapPresenter.swift */; };
@@ -76,7 +75,6 @@
 		7CF1BCF52910252200DDFA22 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/LaunchScreen.storyboard; sourceTree = "<group>"; };
 		7CF1BCF72910252200DDFA22 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		7CF1BCFD2910295800DDFA22 /* MapViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MapViewController.swift; sourceTree = "<group>"; };
-		7CF1BD0D2910475900DDFA22 /* MainViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MainViewController.swift; sourceTree = "<group>"; };
 		7CF1BD0F29105F3000DDFA22 /* ViewFactory.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ViewFactory.swift; sourceTree = "<group>"; };
 		7CF1BD11291061CF00DDFA22 /* SystemSymbol.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SystemSymbol.swift; sourceTree = "<group>"; };
 		7CF1BD13291068DD00DDFA22 /* MapPresenter.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MapPresenter.swift; sourceTree = "<group>"; };
@@ -309,7 +307,6 @@
 		7CF1BD0429103FD500DDFA22 /* Modules */ = {
 			isa = PBXGroup;
 			children = (
-				7CF1BD0B2910472300DDFA22 /* MainModule */,
 				7CF1BD052910401F00DDFA22 /* MapModule */,
 				7C6C75DA294E241E008A6360 /* PlacesModule */,
 				7CAFB57D2969A87700F00979 /* PlaceDetailsModule */,
@@ -368,22 +365,6 @@
 				7CF1BD13291068DD00DDFA22 /* MapPresenter.swift */,
 			);
 			path = Presenter;
-			sourceTree = "<group>";
-		};
-		7CF1BD0B2910472300DDFA22 /* MainModule */ = {
-			isa = PBXGroup;
-			children = (
-				7CF1BD0C2910473700DDFA22 /* View */,
-			);
-			path = MainModule;
-			sourceTree = "<group>";
-		};
-		7CF1BD0C2910473700DDFA22 /* View */ = {
-			isa = PBXGroup;
-			children = (
-				7CF1BD0D2910475900DDFA22 /* MainViewController.swift */,
-			);
-			path = View;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -485,7 +466,6 @@
 				7CAFB5852969BA5300F00979 /* PlaceImageCell.swift in Sources */,
 				7CAFB5812969A8F400F00979 /* PlaceDetailsController.swift in Sources */,
 				7C1B4D2F294E1E5D00543D9F /* Point.swift in Sources */,
-				7CF1BD0E2910475900DDFA22 /* MainViewController.swift in Sources */,
 				7C1B4D2B294E1D6C00543D9F /* Preview.swift in Sources */,
 				7C1B4D18294E132300543D9F /* Places.swift in Sources */,
 				7CAFB531295B78C200F00979 /* PlacesListPresenter.swift in Sources */,
