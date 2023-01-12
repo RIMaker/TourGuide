@@ -172,7 +172,10 @@ class RouteControllerImpl: UIViewController, RouteController {
         DispatchQueue.main.async { [weak self] in
             self?.makeRouteStackView.isHidden = true
         }
-        presenter?.mapManager?.getDirections(place: presenter?.place, by: .automobile) { [weak self] info in
+        presenter?.mapManager?.getDirections(
+            lat: presenter?.place?.point?.lat,
+            lon: presenter?.place?.point?.lon,
+            by: .automobile) { [weak self] info in
             DispatchQueue.main.async {
                 self?.infoLabel.text = info
                 self?.infoLabel.isHidden = false
@@ -185,7 +188,10 @@ class RouteControllerImpl: UIViewController, RouteController {
         DispatchQueue.main.async { [weak self] in
             self?.makeRouteStackView.isHidden = true
         }
-        presenter?.mapManager?.getDirections(place: presenter?.place, by: .walking) { [weak self] info in
+        presenter?.mapManager?.getDirections(
+            lat: presenter?.place?.point?.lat,
+            lon: presenter?.place?.point?.lon,
+            by: .walking) { [weak self] info in
             DispatchQueue.main.async {
                 self?.infoLabel.text = info
                 self?.infoLabel.isHidden = false

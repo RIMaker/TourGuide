@@ -58,7 +58,6 @@ class ViewFactoryImpl: ViewFactory {
         let placesVCPresenter: PlacesListPresenter = PlacesListPresenterImpl(
             networkManager: NetworkManagerImpl(),
             cacheManager: CacheManagerImpl(),
-            mapManager: MapManager(),
             view: placesVC,
             router: router)
         placesVC.presenter = placesVCPresenter
@@ -83,10 +82,8 @@ class ViewFactoryImpl: ViewFactory {
     
     func makeRouteScreen(place: PlaceProperties?) -> UIViewController {
         let routeVC = RouteControllerImpl()
-        let mapManager = MapManager()
         let routeVCPresenter: RoutePresenter = RoutePresenterImpl(
             place: place,
-            mapManager: mapManager,
             view: routeVC)
         routeVC.presenter = routeVCPresenter
         return routeVC
