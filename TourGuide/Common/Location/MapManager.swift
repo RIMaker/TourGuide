@@ -37,7 +37,7 @@ protocol MapManagerMapModule {
     func removeAnnotation()
 }
 
-class MapManager: MapManagerRouteModule {
+class MapManager {
     
     var locationManager: CLLocationManager
     
@@ -60,6 +60,56 @@ class MapManager: MapManagerRouteModule {
         self.mapView = mapView
     }
     
+    private func showAlert(title: String, message: String) {
+        print(title)
+        print(message)
+//        let alert = UIAlertController(title: title, message: message, preferredStyle: .alert)
+//        let action = UIAlertAction(title: "OK", style: .default)
+//        alert.addAction(action)
+//
+//        let alertWindow = UIWindow(frame: UIScreen.main.bounds)
+//        alertWindow.rootViewController = UIViewController()
+//        alertWindow.windowLevel = UIWindow.Level.alert + 1
+//        alertWindow.makeKeyAndVisible()
+//        alertWindow.rootViewController?.present(alert, animated: true)
+    }
+    
+    private func startTrackingUserLocation() {
+        guard
+            let previousLocation = previousLocation
+        else { return }
+        let center = getCenterLocation()
+        guard let distance = center?.distance(from: previousLocation), distance > 50 else { return }
+        self.previousLocation = center
+        DispatchQueue.main.asyncAfter(deadline: .now() + 3) { [weak self] in
+            self?.showUserLocation()
+        }
+    }
+    
+    private func createDirectionsRequest(lat: Double?, lon: Double?, from coordinate: CLLocationCoordinate2D, by transportType: MKDirectionsTransportType) -> MKDirections.Request? {
+        guard
+            let lat = lat,
+            let lon = lon
+        else { return nil }
+        
+        let destinationCoordinate = CLLocationCoordinate2D(latitude: lat, longitude: lon)
+        let startingLocation = MKPlacemark(coordinate: coordinate)
+        let destinationLocation = MKPlacemark(coordinate: destinationCoordinate)
+        
+        let request = MKDirections.Request()
+        request.source = MKMapItem(placemark: startingLocation)
+        request.destination = MKMapItem(placemark: destinationLocation)
+        request.transportType = transportType
+        request.requestsAlternateRoutes = true
+        
+        return request
+    }
+    
+}
+
+
+// MARK: RouteManager
+extension MapManager: MapManagerRouteModule {
     func checkLocationAuthorization(completion: (() -> ())?) {
         completion?()
         switch CLLocationManager.authorizationStatus() {
@@ -163,55 +213,9 @@ class MapManager: MapManagerRouteModule {
             
         }
     }
-    
-    private func showAlert(title: String, message: String) {
-        print(title)
-        print(message)
-//        let alert = UIAlertController(title: title, message: message, preferredStyle: .alert)
-//        let action = UIAlertAction(title: "OK", style: .default)
-//        alert.addAction(action)
-//
-//        let alertWindow = UIWindow(frame: UIScreen.main.bounds)
-//        alertWindow.rootViewController = UIViewController()
-//        alertWindow.windowLevel = UIWindow.Level.alert + 1
-//        alertWindow.makeKeyAndVisible()
-//        alertWindow.rootViewController?.present(alert, animated: true)
-    }
-    
-    private func startTrackingUserLocation() {
-        guard
-            let previousLocation = previousLocation
-        else { return }
-        let center = getCenterLocation()
-        guard let distance = center?.distance(from: previousLocation), distance > 50 else { return }
-        self.previousLocation = center
-        DispatchQueue.main.asyncAfter(deadline: .now() + 3) { [weak self] in
-            self?.showUserLocation()
-        }
-    }
-    
-    private func createDirectionsRequest(lat: Double?, lon: Double?, from coordinate: CLLocationCoordinate2D, by transportType: MKDirectionsTransportType) -> MKDirections.Request? {
-        guard
-            let lat = lat,
-            let lon = lon
-        else { return nil }
-        
-        let destinationCoordinate = CLLocationCoordinate2D(latitude: lat, longitude: lon)
-        let startingLocation = MKPlacemark(coordinate: coordinate)
-        let destinationLocation = MKPlacemark(coordinate: destinationCoordinate)
-        
-        let request = MKDirections.Request()
-        request.source = MKMapItem(placemark: startingLocation)
-        request.destination = MKMapItem(placemark: destinationLocation)
-        request.transportType = transportType
-        request.requestsAlternateRoutes = true
-        
-        return request
-    }
-    
 }
 
-
+// MARK: MapManager
 extension MapManager: MapManagerMapModule {
     func getCenterLocation() -> CLLocation? {
         guard
