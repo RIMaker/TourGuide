@@ -16,4 +16,5 @@ enum SystemSymbol: String {
     case makeRouteByFoot = "figure.walk.circle.fill"
     case makeRouteByCar = "car.circle.fill"
     case userLocation = "location.circle.fill"
+    case stopRouting = "flag.checkered.2.crossed"
 }

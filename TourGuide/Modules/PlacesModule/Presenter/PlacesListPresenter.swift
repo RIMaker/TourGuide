@@ -12,7 +12,7 @@ protocol PlacesListPresenter {
     var places: Places? { get }
     var mapManager: MapManagerPlacesModule? { get }
     var userLocation: CLPlacemark? { get }
-    init(networkManager: NetworkManager, cacheManager: CacheManager, mapManager: MapManagerPlacesModule, view: PlacesListController?, router: RouterPlacesListScreen?)
+    init(networkManager: NetworkManager, cacheManager: CacheManager, view: PlacesListController?, router: RouterPlacesListScreen?)
     func viewShown()
     func tapOnThePlace(place: Feature?)
     func updateData()
@@ -33,12 +33,11 @@ class PlacesListPresenterImpl: PlacesListPresenter {
     
     private let cacheManager: CacheManager
     
-    required init(networkManager: NetworkManager, cacheManager: CacheManager, mapManager: MapManagerPlacesModule, view: PlacesListController?, router: RouterPlacesListScreen?) {
+    required init(networkManager: NetworkManager, cacheManager: CacheManager, view: PlacesListController?, router: RouterPlacesListScreen?) {
         self.networkManager = networkManager
         self.cacheManager = cacheManager
         self.view = view
         self.router = router
-        self.mapManager = mapManager
     }
     
     private func fetchData() {
@@ -73,6 +72,7 @@ class PlacesListPresenterImpl: PlacesListPresenter {
     }
     
     func viewShown() {
+        mapManager = MapManager()
         view?.setupViews()
         fetchData()
         mapManager?.requestLocation()

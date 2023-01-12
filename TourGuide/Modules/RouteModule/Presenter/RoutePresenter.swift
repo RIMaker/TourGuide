@@ -12,7 +12,7 @@ import CoreLocation
 protocol RoutePresenter {
     var place: PlaceProperties? { get }
     var mapManager: MapManagerRouteModule? { get }
-    init(place: PlaceProperties?, mapManager: MapManagerRouteModule, view: RouteController?)
+    init(place: PlaceProperties?, view: RouteController?)
     func viewShown(mapView: MKMapView)
 }
 
@@ -23,15 +23,20 @@ class RoutePresenterImpl: RoutePresenter {
     
     private weak var view: RouteController?
     
-    required init(place: PlaceProperties?, mapManager: MapManagerRouteModule, view: RouteController?) {
+    required init(place: PlaceProperties?, view: RouteController?) {
         self.view = view
         self.place = place
-        self.mapManager = mapManager
     }
     
     func viewShown(mapView: MKMapView) {
+        mapManager = MapManager(mapView: mapView)
         view?.setupViews()
-        mapManager?.setupPlacemark(place: place, mapView: mapView)
+        mapManager?.setupPlacemark(
+            lat: place?.point?.lat,
+            lon: place?.point?.lon,
+            title: place?.name,
+            subtitle: place?.getAddress(type: .short)
+        )
     }
     
 }
