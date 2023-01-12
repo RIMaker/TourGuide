@@ -144,8 +144,10 @@ class MapManager: MapManagerRouteModule {
             }
             let routes = response.routes.sorted { $0.expectedTravelTime < $1.expectedTravelTime }
             if let route = routes.first {
-                self?.mapView?.addOverlay(route.polyline)
-                self?.mapView?.setVisibleMapRect(route.polyline.boundingMapRect, animated: true)
+                DispatchQueue.main.asyncAfter(deadline: .now() + 1) {
+                    self?.mapView?.addOverlay(route.polyline)
+                    self?.mapView?.setVisibleMapRect(route.polyline.boundingMapRect, animated: true)
+                }
                 
                 let distance = String(format: "%.2f", route.distance / 1000)
                 let timeIntervalH = String(format: "%d", Int(route.expectedTravelTime) / 3600)

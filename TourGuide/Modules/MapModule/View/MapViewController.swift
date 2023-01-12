@@ -182,6 +182,7 @@ class MapViewControllerImpl: UIViewController, MapViewController {
     
     @objc
     private func makeRouteByCar(_ sender: UIButton) {
+        isShowingDirection = true
         let center = presenter?.mapManager?.getCenterLocation()
         presenter?.mapManager?.setupPlacemark(
             lat: center?.coordinate.latitude,
@@ -196,7 +197,6 @@ class MapViewControllerImpl: UIViewController, MapViewController {
                 self?.infoLabel.text = info
                 self?.makeRouteStackView.isHidden = true
                 self?.pinView.isHidden = true
-                self?.isShowingDirection = true
                 self?.stopRoutingView.isHidden = false
             }
         }
@@ -204,6 +204,7 @@ class MapViewControllerImpl: UIViewController, MapViewController {
     
     @objc
     private func makeRouteOnFoot(_ sender: UIButton) {
+        isShowingDirection = true
         let center = presenter?.mapManager?.getCenterLocation()
         presenter?.mapManager?.setupPlacemark(
             lat: center?.coordinate.latitude,
@@ -218,7 +219,6 @@ class MapViewControllerImpl: UIViewController, MapViewController {
                 self?.infoLabel.text = info
                 self?.makeRouteStackView.isHidden = true
                 self?.pinView.isHidden = true
-                self?.isShowingDirection = true
                 self?.stopRoutingView.isHidden = false
             }
         }
